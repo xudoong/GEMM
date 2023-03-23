@@ -3,6 +3,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
 #include <immintrin.h>
 
 #define A(i, j) A[(i) * lda + (j)]
@@ -15,7 +17,9 @@
 
 void dgemm_mkl(DGEMM_FUNC_SIGNITURE);
 void dgemm_naive(DGEMM_FUNC_SIGNITURE);
+void dgemm_ideal(DGEMM_FUNC_SIGNITURE);
 void dgemm_vec(DGEMM_FUNC_SIGNITURE);
+void dgemm_mypack(DGEMM_FUNC_SIGNITURE);
 
 void scale(double *v, int len, double scale);
 

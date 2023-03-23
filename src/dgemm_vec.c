@@ -5,7 +5,7 @@
 #define BN 16
 
 
-void kernel8x8x8(const double *A, int lda, const double *B, int ldb, double *C, int ldc, double alpha) 
+static void kernel8x8x8(const double *A, int lda, const double *B, int ldb, double *C, int ldc, double alpha) 
 {
     __m512d b[8], c[8], v;
     for (int i = 0; i < 8; i++) {

@@ -48,6 +48,7 @@ int main()
     /* Start test */
     test_one(m, n, k, alpha, beta, A, B, C, C_corr, &dgemm_mkl, "MKL");
     test_one(m, n, k, alpha, beta, A, B, C, C_corr, &dgemm_vec, "VEC");
+    test_one(m, n, k, alpha, beta, A, B, C, C_corr, &dgemm_mypack, "PACK");
 
 
     _mm_free(A);
