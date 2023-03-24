@@ -1,3 +1,6 @@
 **/*.x
 .vscode/*
+**/ref.*
+src/dgemm_ideal.c
+**/*.s
 

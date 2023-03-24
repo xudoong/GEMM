@@ -5,8 +5,12 @@
 #include "dgemm.h"
 
 
-void test_one(int m, int n, int k, double alpha, double beta, double *A, double *B, double *C, double *C_corr, void (*fun_ptr)(DGEMM_FUNC_SIGNITURE), char *name)
-{
+void test_one(int m, int n, int k, double alpha, double beta, const double *A, const double *B, double *C, double *C_corr, void (*fun_ptr)(DGEMM_FUNC_SIGNITURE), char *name)
+{    
+    for (int i = 0; i < (m*n); i++) {
+        C[i] = C_corr[i] = 1.0;
+    }
+
     // warmup doesn't count
     (*fun_ptr)(m, n, k, alpha, A, k, B, n, beta, C, n);
     dgemm_mkl(m, n, k, alpha, A, k, B, n, beta, C_corr, n);
@@ -41,12 +45,9 @@ int main()
         B[i] = (double)(-i-1);
     }
 
-    for (i = 0; i < (m*n); i++) {
-        C[i] = C_corr[i] = 1.0;
-    }
-
     /* Start test */
     test_one(m, n, k, alpha, beta, A, B, C, C_corr, &dgemm_mkl, "MKL");
+    test_one(m, n, k, alpha, beta, A, B, C, C_corr, &dgemm_ideal, "ideal");
     test_one(m, n, k, alpha, beta, A, B, C, C_corr, &dgemm_vec, "VEC");
     test_one(m, n, k, alpha, beta, A, B, C, C_corr, &dgemm_mypack, "PACK");
 

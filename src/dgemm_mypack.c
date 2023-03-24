@@ -1,12 +1,12 @@
 #include "dgemm.h"
 
-#define BK 64
-#define BM 64
-#define BN 64
-#define INNER_BLK_SIZE 8
-#define INNER_BLK_SIZE_SQUARE 64
-
-#define BLK_IDX(i, block_size) ((i) % (block_size))
+#define BK 128
+#define BM 128
+#define BN 128
+#define INNER_BLK_SIZE_M 16
+#define INNER_BLK_SIZE_N 8
+#define INNER_BLK_SIZE_K 16
+#define MYPACK_KERNEL kernel16x8x16
 
 static double *Abuf = NULL;
 static double *Bbuf = NULL;
@@ -25,33 +25,151 @@ static void kernel8x8x8(const double *A, const double *B, double *C)
     }
 
     for (int j = 0; j < 8; j++) {
-        for (int i = 0; i < 8; i+=4) {
-            v[(i + 0)] = _mm512_set1_pd(A[(i + 0) * 8 + j]);
-            v[(i + 1)] = _mm512_set1_pd(A[(i + 1) * 8 + j]);
-            v[(i + 2)] = _mm512_set1_pd(A[(i + 2) * 8 + j]);
-            v[(i + 3)] = _mm512_set1_pd(A[(i + 3) * 8 + j]);
-            c[(i + 0)] = _mm512_fmadd_pd(v[i + 0], b[j], c[(i + 0)]);
-            c[(i + 1)] = _mm512_fmadd_pd(v[i + 1], b[j], c[(i + 1)]);
-            c[(i + 2)] = _mm512_fmadd_pd(v[i + 2], b[j], c[(i + 2)]);
-            c[(i + 3)] = _mm512_fmadd_pd(v[i + 3], b[j], c[(i + 3)]);
-            _mm512_store_pd(C + (i + 0) * 8, c[i + 0]);
-            _mm512_store_pd(C + (i + 1) * 8, c[i + 1]);
-            _mm512_store_pd(C + (i + 2) * 8, c[i + 2]);
-            _mm512_store_pd(C + (i + 3) * 8, c[i + 3]);
+        for (int i = 0; i < 8; i++) {
+            v[i] = _mm512_set1_pd(A[i + j * 8]);
+            c[i] = _mm512_fmadd_pd(v[i], b[j], c[i]);
+            _mm512_store_pd(C + i * 8, c[i]);
         } 
     }
 }
 
+static void kernel16x8x8(const double *A, const double *B, double *C)
+{
+    __m512d b[8], c[16], v[8];
+    for (int i = 0; i < 8; i++) {
+        b[i] = _mm512_load_pd(B + i * 8);
+    }
+    for (int i = 0; i < 16; i++) {
+        c[i] = _mm512_load_pd(C + i * 8);
+    }
+    for (int j = 0; j < 8; j++) {
+        for (int i = 0; i < 16; i++) {
+            v[i % 8] = _mm512_set1_pd(A[i + j * 16]);
+            c[i] = _mm512_fmadd_pd(v[i % 8], b[j], c[i]);
+            _mm512_store_pd(C + i * 8, c[i]);
+        } 
+    }
+
+}
+
+static void kernel16x8x16(const double *A, const double *B, double *C)
+{
+    __m512d b[16], c[16];
+    for (int i = 0; i < 16; i++) {
+        b[i] = _mm512_load_pd(B + i * 8);
+    }
+    for (int i = 0; i < 16; i++) {
+        c[i] = _mm512_load_pd(C + i * 8);
+    }
+    for (int j = 0; j < 16; j++) {
+        for (int i = 0; i < 16; i++) {
+            __m512d v = _mm512_set1_pd(A[i + j * 16]);
+            c[i] = _mm512_fmadd_pd(v, b[j], c[i]);
+            _mm512_store_pd(C + i * 8, c[i]);
+        } 
+    }
+}
+
+static void kernel32x8x8(const double *A, const double *B, double *C)
+{
+    __m512d b[8], c[16], v[8];
+    for (int i = 0; i < 8; i++) {
+        b[i] = _mm512_load_pd(B + i * 8);
+    }
+
+    for (int i = 0; i < 16; i++) {
+        c[i] = _mm512_load_pd(C + i * 8);
+    }
+    for (int j = 0; j < 8; j++) {
+        for (int i = 0; i < 16; i++) {
+            v[i % 8] = _mm512_set1_pd(A[i + j * 32]);
+            c[i] = _mm512_fmadd_pd(v[i % 8], b[j], c[i]);
+            _mm512_store_pd(C + i * 8, c[i]);
+        } 
+    }
+
+    for (int i = 0; i < 16; i++) {
+        c[i] = _mm512_load_pd(C + (i + 16) * 8);
+    }
+    for (int j = 0; j < 8; j++) {
+        for (int i = 0; i < 16; i++) {
+            v[i % 8] = _mm512_set1_pd(A[i + 16 + j * 32]);
+            c[i] = _mm512_fmadd_pd(v[i % 8], b[j], c[i]);
+            _mm512_store_pd(C + (i + 16) * 8, c[i]);
+        } 
+    }
+}
+
+static void kernel32x8x8_v2(const double *A, const double *B, double *C)
+{
+    __m512d b[8], c[12], v[12];
+    for (int i = 0; i < 8; i++) {
+        b[i] = _mm512_load_pd(B + i * 8);
+    }
+
+    for (int i = 0; i < 12; i++) {
+        c[i] = _mm512_load_pd(C + i * 8);
+    }
+    for (int j = 0; j < 8; j++) {
+        for (int i = 0; i < 12; i++) {
+            v[i] = _mm512_set1_pd(A[i + j * 32]);
+            c[i] = _mm512_fmadd_pd(v[i], b[j], c[i]);
+            _mm512_store_pd(C + i * 8, c[i]);
+        } 
+    }
+    for (int i = 0; i < 12; i++) {
+        c[i] = _mm512_load_pd(C + (i + 12) * 8);
+    }
+    for (int j = 0; j < 8; j++) {
+        for (int i = 0; i < 12; i++) {
+            v[i] = _mm512_set1_pd(A[(i + 12) + j * 32]);
+            c[i] = _mm512_fmadd_pd(v[i], b[j], c[i]);
+            _mm512_store_pd(C + (i + 12) * 8, c[i]);
+        } 
+    }
+    for (int i = 0; i < 8; i++) {
+        c[i] = _mm512_load_pd(C + (i + 24) * 8);
+    }
+    for (int j = 0; j < 8; j++) {
+        for (int i = 0; i < 8; i++) {
+            v[i] = _mm512_set1_pd(A[(i + 24) + j * 32]);
+            c[i] = _mm512_fmadd_pd(v[i], b[j], c[i]);
+            _mm512_store_pd(C + (i + 24) * 8, c[i]);
+        } 
+    }
+}
+
+// static void kernel12x8x8(const double *A, const double *B, double *C)
+// {
+//     __m512d b[8], c[12], v[12];
+//     for (int i = 0; i < 8; i++) {
+//         b[i] = _mm512_load_pd(B + i * 8);
+//     }
+//     for (int i = 0; i < 12; i++) {
+//         c[i] = _mm512_load_pd(C + i * 8);
+//     }
+//     for (int j = 0; j < 8; j++) {
+//         for (int i = 0; i < 12; i++) {
+//             v[i] = _mm512_set1_pd(A[i + j * 16]);
+//             c[i] = _mm512_fmadd_pd(v[i], b[j], c[i]);
+//             _mm512_store_pd(C + i * 8, c[i]);
+//         } 
+//     }
+
+// }
+
+// store inner most block of A as col major
 static void do_packA(int M, int K, const double *A)
 {
     for (int bk = 0; bk < K; bk += BK)
         for (int bm = 0; bm < M; bm += BM)
-            for (int k = bk; k < MIN(bk + BK, K); k += INNER_BLK_SIZE)
-                for (int i = bm; i < MIN(bm + BM, M); i += INNER_BLK_SIZE)
+            for (int k = bk; k < MIN(bk + BK, K); k += INNER_BLK_SIZE_K)
+                for (int i = bm; i < MIN(bm + BM, M); i += INNER_BLK_SIZE_M)
                 {
-                    int offset = (bk * M + bm * BK) + ((k - bk) * BM + (i - bm) * INNER_BLK_SIZE);
-                    for (int ii = 0; ii < INNER_BLK_SIZE; ii++)
-                        memcpy(Abuf + offset + ii * INNER_BLK_SIZE, &A[(i + ii) * K + k], sizeof(double) * INNER_BLK_SIZE);
+                    int offset = (bk * M + bm * BK) + ((k - bk) * BM + (i - bm) * INNER_BLK_SIZE_K);
+                    for (int ii = 0; ii < INNER_BLK_SIZE_M; ii++)
+                        for (int kk = 0; kk < INNER_BLK_SIZE_K; kk++)
+                            Abuf[offset + kk * INNER_BLK_SIZE_M + ii] = A[(i + ii) * K + k + kk];
                 }
 }
 
@@ -59,12 +177,12 @@ static void do_packB(int K, int N, const double *B)
 {
     for (int bk = 0; bk < K; bk += BK)
         for (int bn = 0; bn < N; bn += BN)
-            for (int k = bk; k < MIN(bk + BK, K); k += INNER_BLK_SIZE)
-                for (int j = bn; j < MIN(bn + BN, N); j += INNER_BLK_SIZE)
+            for (int k = bk; k < MIN(bk + BK, K); k += INNER_BLK_SIZE_K)
+                for (int j = bn; j < MIN(bn + BN, N); j += INNER_BLK_SIZE_N)
                 {
-                    int offset = (bk * N + bn * BK) + ((k - bk) * BN + (j - bn) * INNER_BLK_SIZE);
-                    for (int kk = 0; kk < INNER_BLK_SIZE; kk++)
-                        memcpy(Bbuf + offset + kk * INNER_BLK_SIZE, &B[(k + kk) * N + j], sizeof(double) * INNER_BLK_SIZE); 
+                    int offset = (bk * N + bn * BK) + ((k - bk) * BN + (j - bn) * INNER_BLK_SIZE_K);
+                    for (int kk = 0; kk < INNER_BLK_SIZE_K; kk++)
+                        memcpy(Bbuf + offset + kk * INNER_BLK_SIZE_N, &B[(k + kk) * N + j], sizeof(double) * INNER_BLK_SIZE_N); 
                 }
 }
 
@@ -72,13 +190,13 @@ static void do_unpackC(int M, int N, double *C, double alpha)
 {       
     for (int bm = 0; bm < M; bm += BM)
         for (int bn = 0; bn < N; bn += BN)
-            for (int i = bm; i < MIN(bm + BM, M); i += INNER_BLK_SIZE)
-                for (int j = bn; j < MIN(bn + BN, N); j += INNER_BLK_SIZE)
+            for (int i = bm; i < MIN(bm + BM, M); i += INNER_BLK_SIZE_M)
+                for (int j = bn; j < MIN(bn + BN, N); j += INNER_BLK_SIZE_N)
                 {
-                    int offset = (bm * N + bn * BM) + ((i - bm) * BN + (j - bn) * INNER_BLK_SIZE);
-                    for (int ii = 0; ii < INNER_BLK_SIZE; ii++)
-                        for (int jj = 0; jj < INNER_BLK_SIZE; jj++)
-                            C[(i + ii) * N + (j + jj)] += alpha * Cbuf[offset + ii * INNER_BLK_SIZE + jj];
+                    int offset = (bm * N + bn * BM) + ((i - bm) * BN + (j - bn) * INNER_BLK_SIZE_M);
+                    for (int ii = 0; ii < INNER_BLK_SIZE_M; ii++)
+                        for (int jj = 0; jj < INNER_BLK_SIZE_N; jj++)
+                            C[(i + ii) * N + (j + jj)] += alpha * Cbuf[offset + ii * INNER_BLK_SIZE_N + jj];
                 }
 }
 
@@ -117,13 +235,13 @@ void dgemm_mypack(DGEMM_FUNC_SIGNITURE)
         for (int bm = 0; bm < M; bm += BM)
             for (int bn = 0; bn < N; bn += BN)
             {
-                for (int k = bk; k < MIN(bk+BK, K); k+=8) {
-                    for (int i = bm; i < MIN(bm+BM, M); i+=8) {
-                        for (int j = bn; j < MIN(bn+BN, N); j+=8) {
-                            int Aoffset = (bk * M + bm * BK) + ((k - bk) * BM + (i - bm) * INNER_BLK_SIZE);
-                            int Boffset = (bk * N + bn * BK) + ((k - bk) * BN + (j - bn) * INNER_BLK_SIZE);
-                            int Coffset = (bm * N + bn * BM) + ((i - bm) * BN + (j - bn) * INNER_BLK_SIZE);
-                            kernel8x8x8(Abuf + Aoffset, Bbuf + Boffset, Cbuf+Coffset);
+                for (int k = bk; k < MIN(bk+BK, K); k+=INNER_BLK_SIZE_K) {
+                    for (int i = bm; i < MIN(bm+BM, M); i+=INNER_BLK_SIZE_M) {
+                        for (int j = bn; j < MIN(bn+BN, N); j+=INNER_BLK_SIZE_N) {
+                            int Aoffset = (bk * M + bm * BK) + ((k - bk) * BM + (i - bm) * INNER_BLK_SIZE_K);
+                            int Boffset = (bk * N + bn * BK) + ((k - bk) * BN + (j - bn) * INNER_BLK_SIZE_K);
+                            int Coffset = (bm * N + bn * BM) + ((i - bm) * BN + (j - bn) * INNER_BLK_SIZE_M);
+                            MYPACK_KERNEL(Abuf + Aoffset, Bbuf + Boffset, Cbuf+Coffset);
                         }
                     }
                 }
