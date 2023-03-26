@@ -19,7 +19,7 @@ void test_one(int m, int n, int k, double alpha, double beta, double *A, double 
     clock_t end_clock = clock();
 
     const double MAX_GFLOPs = 3.8 * 2 * 2 * (512 / 64);
-    double time_sec = (double)(end_clock - start_clock) / CLOCKS_PER_SEC;
+    double time_sec = (double)(1.0 * end_clock - start_clock) / CLOCKS_PER_SEC;
     double GFLOPs = (1.0 * m * k * n * 2 * repeat) / time_sec / 1e9;
     printf("[%s] m=%d,n=%d,k=%d GFLOPS=%.1f (%.0f%%)\n", name, m, n, k, GFLOPs, GFLOPs / MAX_GFLOPs * 100);
 }
@@ -32,7 +32,7 @@ int main(int argc, char **argv)
     double alpha, beta;
 
     m = 512, k = 512, n = 512;
-    repeat = 10;
+    repeat = 30;
     alpha = 1.0; beta = 2.0;
 
     if (argc == 2) {
@@ -62,9 +62,10 @@ int main(int argc, char **argv)
 
     /* Start test */
     test_one(m, n, k, alpha, beta, A, B, C, repeat, &dgemm_mkl, "MKL");
-    test_one(m, n, k, alpha, beta, A, B, C, repeat, &dgemm_ideal, "IDEAL");
-    test_one(m, n, k, alpha, beta, A, B, C, repeat, &dgemm_vec, "VEC");
+    // test_one(m, n, k, alpha, beta, A, B, C, repeat, &dgemm_ideal, "IDEAL");
+    // test_one(m, n, k, alpha, beta, A, B, C, repeat, &dgemm_vec, "VEC");
     test_one(m, n, k, alpha, beta, A, B, C, repeat, &dgemm_mypack, "PACK");
+    test_one(m, n, k, alpha, beta, A, B, C, repeat, &dgemm_v1, "v1");
 
 
     _mm_free(A);

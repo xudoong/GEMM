@@ -23,7 +23,7 @@ void test_one(int m, int n, int k, double alpha, double beta, const double *A, c
 }
 
 
-int main()
+int main(int argc, char** argv)
 {
     double *A, *B, *C, *C_corr;
     int m, n, k, i, j;
@@ -31,6 +31,15 @@ int main()
 
     m = n = k = 128;
     alpha = 1.0; beta = 2.0;
+
+    if (argc == 2) {
+        m = n = k = atoi(argv[1]);
+    }
+    if (argc == 4) {
+        m = atoi(argv[1]);
+        n = atoi(argv[2]);
+        k = atoi(argv[3]);
+    }
 
     A = (double *) _mm_malloc( m * k * sizeof( double ), 64);
     B = (double *) _mm_malloc( k * n * sizeof( double ), 64);
@@ -47,9 +56,10 @@ int main()
 
     /* Start test */
     test_one(m, n, k, alpha, beta, A, B, C, C_corr, &dgemm_mkl, "MKL");
-    test_one(m, n, k, alpha, beta, A, B, C, C_corr, &dgemm_ideal, "ideal");
-    test_one(m, n, k, alpha, beta, A, B, C, C_corr, &dgemm_vec, "VEC");
+    // test_one(m, n, k, alpha, beta, A, B, C, C_corr, &dgemm_ideal, "ideal");
+    // test_one(m, n, k, alpha, beta, A, B, C, C_corr, &dgemm_vec, "VEC");
     test_one(m, n, k, alpha, beta, A, B, C, C_corr, &dgemm_mypack, "PACK");
+    test_one(m, n, k, alpha, beta, A, B, C, C_corr, &dgemm_v1, "v1");
 
 
     _mm_free(A);

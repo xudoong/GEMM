@@ -1,12 +1,12 @@
 #include "dgemm.h"
 
-#define BK 128
-#define BM 128
-#define BN 128
+#define BK 1024
+#define BM 1024
+#define BN 1024
 #define INNER_BLK_SIZE_M 16
 #define INNER_BLK_SIZE_N 8
-#define INNER_BLK_SIZE_K 16
-#define MYPACK_KERNEL kernel16x8x16
+#define INNER_BLK_SIZE_K 64
+#define MYPACK_KERNEL kernel16x8x64
 
 static double *Abuf = NULL;
 static double *Bbuf = NULL;
@@ -16,6 +16,102 @@ static int Abuf_len = 4096 * 4096;
 static int Bbuf_len = 4096 * 4096;
 static int Cbuf_len = 4096 * 4096;
 
+/* kernel 16x8xk */
+#define kernel16x8xk_block_start \
+    __m512d b[16], c[16]; \
+    for (int i = 0; i < 16; i++) { \
+        b[i] = _mm512_load_pd(B + i * 8); \
+    } \
+    for (int i = 0; i < 16; i++) { \
+        c[i] = _mm512_load_pd(C + i * 8); \
+    }
+#define kernel16x8xk_block_end \
+    for (int i = 0; i < 16; i++) { \
+        _mm512_store_pd(C + i * 8, c[i]); \
+    }
+
+#define kernel16x8xk_block(idx) \
+    for (int j = 0; j < 16; j++) { \
+        for (int i = 0; i < 16; i++) { \
+            __m512d v = _mm512_set1_pd(A[i + (j + (idx) * 16) * 16]); \
+            c[i] = _mm512_fmadd_pd(v, b[j], c[i]); \
+        } \
+        b[j] = _mm512_load_pd(B + (j + (idx + 1) * 16) * 8); \
+    }
+#define kernel16x8xk_block_last(idx) \
+    for (int j = 0; j < 16; j++) { \
+        for (int i = 0; i < 16; i++) { \
+            __m512d v = _mm512_set1_pd(A[i + (j + (idx) * 16) * 16]); \
+            c[i] = _mm512_fmadd_pd(v, b[j], c[i]); \
+        } \
+    }
+
+/* kernel 24x8xk */
+
+#define kernel24x8xk_block_start \
+    __m512d b[8], c[24]; \
+    for (int i = 0; i < 8; i++) { \
+        b[i] = _mm512_load_pd(B + i * 8); \
+    } \
+    for (int i = 0; i < 24; i++) { \
+        c[i] = _mm512_load_pd(C + i * 8); \
+    }
+#define kernel24x8xk_block_end \
+    for (int i = 0; i < 24; i++) { \
+        _mm512_store_pd(C + i * 8, c[i]); \
+    }
+
+#define kernel24x8xk_block(idx) \
+    for (int j = 0; j < 8; j++) { \
+        _Pragma("GCC unroll 24") \
+        for (int i = 0; i < 24; i++) { \
+            __m512d v = _mm512_set1_pd(A[i + (j + (idx) * 8) * 24]); \
+            c[i] = _mm512_fmadd_pd(v, b[j], c[i]); \
+        } \
+        b[j] = _mm512_load_pd(B + (j + (idx + 1) * 8) * 8); \
+    }
+#define kernel24x8xk_block_last(idx) \
+    for (int j = 0; j < 8; j++) { \
+        _Pragma("GCC unroll 24") \
+        for (int i = 0; i < 24; i++) { \
+            __m512d v = _mm512_set1_pd(A[i + (j + (idx) * 8) * 24]); \
+            c[i] = _mm512_fmadd_pd(v, b[j], c[i]); \
+        } \
+    }
+
+// /* kernel 16x8xk with prefetch */
+// #define kernel16x8xk_block_start \
+//     __m512d b[16], c[16]; \
+//     _mm_prefetch(A, _MM_HINT_T0); \
+//     for (int i = 0; i < 16; i++) { \
+//         b[i] = _mm512_load_pd(B + i * 8); \
+//     } \
+//     for (int i = 0; i < 16; i++) { \
+//         c[i] = _mm512_load_pd(C + i * 8); \
+//     }
+// #define kernel16x8xk_block_end \
+//     for (int i = 0; i < 16; i++) { \
+//         _mm512_store_pd(C + i * 8, c[i]); \
+//         _mm_prefetch(C + (i + 16) * 8, _MM_HINT_T0); \
+//     }
+
+// #define kernel16x8xk_block(idx) \
+//     for (int j = 0; j < 16; j++) { \
+//         for (int i = 0; i < 16; i++) { \
+//             __m512d v = _mm512_set1_pd(A[i + (j + (idx) * 16) * 16]); \
+//             c[i] = _mm512_fmadd_pd(v, b[j], c[i]); \
+//         } \
+//         b[j] = _mm512_load_pd(B + (j + (idx + 1) * 16) * 8); \
+//     }
+// #define kernel16x8xk_block_last(idx) \
+//     for (int j = 0; j < 16; j++) { \
+//         for (int i = 0; i < 16; i++) { \
+//             __m512d v = _mm512_set1_pd(A[i + (j + (idx) * 16) * 16]); \
+//             c[i] = _mm512_fmadd_pd(v, b[j], c[i]); \
+//         } \
+//         _mm_prefetch(B + (j + (idx + 1) * 16) * 8, _MM_HINT_T0); \
+//     }
+    
 static void kernel8x8x8(const double *A, const double *B, double *C)
 {
     __m512d b[8], c[8], v[8];
@@ -46,8 +142,10 @@ static void kernel16x8x8(const double *A, const double *B, double *C)
         for (int i = 0; i < 16; i++) {
             v[i % 8] = _mm512_set1_pd(A[i + j * 16]);
             c[i] = _mm512_fmadd_pd(v[i % 8], b[j], c[i]);
-            _mm512_store_pd(C + i * 8, c[i]);
         } 
+    }
+    for (int i = 0; i < 8; i++) {
+        _mm512_store_pd(C + i * 8, c[i]);
     }
 
 }
@@ -65,10 +163,63 @@ static void kernel16x8x16(const double *A, const double *B, double *C)
         for (int i = 0; i < 16; i++) {
             __m512d v = _mm512_set1_pd(A[i + j * 16]);
             c[i] = _mm512_fmadd_pd(v, b[j], c[i]);
-            _mm512_store_pd(C + i * 8, c[i]);
         } 
     }
+    for (int i = 0; i < 16; i++) {
+        _mm512_store_pd(C + i * 8, c[i]);
+    }
 }
+
+static void kernel16x8x32(const double *A, const double *B, double *C)
+{
+    kernel16x8xk_block_start
+    kernel16x8xk_block(0)
+    kernel16x8xk_block(1)
+    kernel16x8xk_block_end
+}
+
+static void kernel16x8x64(const double *A, const double *B, double *C)
+{
+    kernel16x8xk_block_start
+    kernel16x8xk_block(0)
+    kernel16x8xk_block(1)
+    kernel16x8xk_block(2)
+    kernel16x8xk_block_last(3)
+    kernel16x8xk_block_end
+}
+
+static void kernel24x8x16(const double *A, const double *B, double *C)
+{
+    kernel24x8xk_block_start
+    kernel24x8xk_block(0)
+    kernel24x8xk_block_last(1)
+    kernel24x8xk_block_end
+}
+
+static void kernel24x8x32(const double *A, const double *B, double *C)
+{
+    kernel24x8xk_block_start
+    kernel24x8xk_block(0)
+    kernel24x8xk_block(1)
+    kernel24x8xk_block(2)
+    kernel24x8xk_block_last(3)
+    kernel24x8xk_block_end
+}
+
+static void kernel24x8x64(const double *A, const double *B, double *C)
+{
+    kernel24x8xk_block_start
+    kernel24x8xk_block(0)
+    kernel24x8xk_block(1)
+    kernel24x8xk_block(2)
+    kernel24x8xk_block(3)
+    kernel24x8xk_block(4)
+    kernel24x8xk_block(5)
+    kernel24x8xk_block(6)
+    kernel24x8xk_block_last(7)
+    kernel24x8xk_block_end
+}
+
 
 static void kernel32x8x8(const double *A, const double *B, double *C)
 {
@@ -138,25 +289,6 @@ static void kernel32x8x8_v2(const double *A, const double *B, double *C)
         } 
     }
 }
-
-// static void kernel12x8x8(const double *A, const double *B, double *C)
-// {
-//     __m512d b[8], c[12], v[12];
-//     for (int i = 0; i < 8; i++) {
-//         b[i] = _mm512_load_pd(B + i * 8);
-//     }
-//     for (int i = 0; i < 12; i++) {
-//         c[i] = _mm512_load_pd(C + i * 8);
-//     }
-//     for (int j = 0; j < 8; j++) {
-//         for (int i = 0; i < 12; i++) {
-//             v[i] = _mm512_set1_pd(A[i + j * 16]);
-//             c[i] = _mm512_fmadd_pd(v[i], b[j], c[i]);
-//             _mm512_store_pd(C + i * 8, c[i]);
-//         } 
-//     }
-
-// }
 
 // store inner most block of A as col major
 static void do_packA(int M, int K, const double *A)
