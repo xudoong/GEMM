@@ -33,7 +33,7 @@ int main(int argc, char **argv)
 
     m = 512, k = 512, n = 512;
     repeat = 30;
-    alpha = 1.0; beta = 2.0;
+    alpha = 2.0; beta = 2.0;
 
     if (argc == 2) {
         m = n = k = atoi(argv[1]);
@@ -64,8 +64,9 @@ int main(int argc, char **argv)
     test_one(m, n, k, alpha, beta, A, B, C, repeat, &dgemm_mkl, "MKL");
     // test_one(m, n, k, alpha, beta, A, B, C, repeat, &dgemm_ideal, "IDEAL");
     // test_one(m, n, k, alpha, beta, A, B, C, repeat, &dgemm_vec, "VEC");
-    test_one(m, n, k, alpha, beta, A, B, C, repeat, &dgemm_mypack, "PACK");
+    // test_one(m, n, k, alpha, beta, A, B, C, repeat, &dgemm_mypack, "PACK");
     test_one(m, n, k, alpha, beta, A, B, C, repeat, &dgemm_v1, "v1");
+    test_one(m, n, k, alpha, beta, A, B, C, repeat, &dgemm_v2, "v2");
 
 
     _mm_free(A);

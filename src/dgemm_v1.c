@@ -28,15 +28,21 @@ static void kernel_n24m8(const double * __restrict__ A, const double * __restric
         b[1] = _mm512_load_pd(B + k * 24 + 8);
         b[2] = _mm512_load_pd(B + k * 24 + 16);
 
+        _mm_prefetch(B + (k + 4) * 24 + 8, _MM_HINT_T0);
+        _mm_prefetch(B + (k + 4) * 24 + 0, _MM_HINT_T0);
+        _mm_prefetch(B + (k + 4) * 24 + 16, _MM_HINT_T0);
+        _mm_prefetch(A + (k + 4) * 8, _MM_HINT_T0);
         
+        _Pragma("GCC unroll 8")
         for (int i = 0; i < 8; i++) {
             __m512d a = _mm512_set1_pd(A[k * 8 + i]);
             c[i * 3 + 0] = _mm512_fmadd_pd(a, b[0], c[i * 3 + 0]);
             c[i * 3 + 1] = _mm512_fmadd_pd(a, b[1], c[i * 3 + 1]);
             c[i * 3 + 2] = _mm512_fmadd_pd(a, b[2], c[i * 3 + 2]);
-
         }
     }
+
+    _mm_prefetch(C + 24 * 8, _MM_HINT_T0);
 
     // store
     _Pragma("GCC unroll 24")
@@ -63,9 +69,10 @@ static void do_packB(int K, int N, const double *B)
 
 static void do_unpackC(int M, int N, double *C, double alpha)
 {
-    for (int bn = 0; bn < N; bn += BN)
-        for (int bm = 0; bm < M; bm += BM)
+    for (int bm = 0; bm < M; bm += BM)
+        for (int bn = 0; bn < N; bn += BN)
             for (int i = 0; i < BM; i++)
+                _Pragma("GCC ivdep")
                 for (int j = 0; j < BN; j++)
                     C[(bm + i) * N + bn + j] += alpha * Cbuf[bn * M + bm * BN + i * BN + j];
 

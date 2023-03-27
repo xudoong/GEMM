@@ -21,6 +21,7 @@ void dgemm_ideal(DGEMM_FUNC_SIGNITURE);
 void dgemm_vec(DGEMM_FUNC_SIGNITURE);
 void dgemm_mypack(DGEMM_FUNC_SIGNITURE);
 void dgemm_v1(DGEMM_FUNC_SIGNITURE);
+void dgemm_v2(DGEMM_FUNC_SIGNITURE);
 
 void scale(double *v, int len, double scale);
 
