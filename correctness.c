@@ -22,9 +22,17 @@ void test_one(int m, int n, int k, double alpha, double beta, const double *A, c
     printf("[%s] pass=%d, r=%.10f \n", name, r <= 1e-8, r);
 }
 
+double randfrom(double min, double max) 
+{
+    double range = (max - min); 
+    double div = RAND_MAX / range;
+    return min + (rand() / div);
+}
 
 int main(int argc, char** argv)
 {
+    srand(time(NULL));
+    
     double *A, *B, *C, *C_corr;
     int m, n, k, i, j;
     double alpha, beta;
@@ -46,12 +54,12 @@ int main(int argc, char** argv)
     C = (double *) _mm_malloc( m * n * sizeof( double ), 64);
     C_corr = (double *) _mm_malloc( m * n * sizeof( double ), 64);
 
-    for (i = 0; i < (m*k); i++) {
-        A[i] = (double)(i+1);
+    for (i = 0; i < (m * k); i++) {
+        A[i] = randfrom(-1, 1);
     }
 
-    for (i = 0; i < (k*n); i++) {
-        B[i] = (double)(-i-1);
+    for (i = 0; i < (k * n); i++) {
+        B[i] = randfrom(-1, 1);
     }
 
     /* Start test */
@@ -61,6 +69,7 @@ int main(int argc, char** argv)
     // test_one(m, n, k, alpha, beta, A, B, C, C_corr, &dgemm_mypack, "PACK");
     test_one(m, n, k, alpha, beta, A, B, C, C_corr, &dgemm_v1, "v1");
     test_one(m, n, k, alpha, beta, A, B, C, C_corr, &dgemm_v2, "v2");
+    test_one(m, n, k, alpha, beta, A, B, C, C_corr, &dgemm_v3, "v3");
 
 
     _mm_free(A);

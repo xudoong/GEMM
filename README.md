@@ -57,3 +57,20 @@ Optimize packing from V1.
 * Split the packing of A and B into block pieces and make them close to the kernel call.
 
 Result: 99 GFLOPs (81%) when (MNK=1024x960x1024).
+
+## V3
+
+Tiling + V2. Tile Size (TM, TN, TK) = (1024, 1920, 1024).
+
+Result compare with MKL, square size (M=N=K):
+
+| MNK | 240 | 384 | 480 | 768 | 960 | 1200 | 1440 | 1920 | 2400 | 3840 |
+|-----|-----|-----|-----|-----|-----|------|------|------|------|------|
+| MKL | 68  | 70  | 78  | 77  | 84  | 81   | 86   | 80   | 84   | 85   |
+| V3  | 34  | 70  | 68  | 77  | 82  | 75   | 76   | 80   | 77   | 81   |
+
+The value is the achieved GFLOPs represented in the format of the percentage of MAX theoretical GFLOPs (3.8GHz * 2FMadd * 2 AVX-512 * 512 / 64 = 121.6GHz).
+
+From the table it can be seen that when there are small marginal tiles, the performance is bad (1200, 2400). So a further optimization is to choose the tile size based on the input MNK value.
+
+
