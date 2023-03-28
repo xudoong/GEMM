@@ -12,6 +12,8 @@
 #define C(i, j) C[(i) * ldc + (j)]
 
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
+#define CEIL_DIV(x, d) (((x) + (d) - 1) / (d))
+#define CEIL(x, d) (CEIL_DIV(x, d) * d)
 
 #define DGEMM_FUNC_SIGNITURE int M, int N, int K, double alpha, const double *A, int lda, const double *B, int ldb, double beta, double *C, int ldc
 

@@ -5,9 +5,9 @@
 #define BM 8
 #define BN 24
 
-#define TILE_M 1024
-#define TILE_N 1920
-#define TILE_K 1024
+#define DEFAULT_TILE_M 1024
+#define DEFAULT_TILE_N 1920
+#define DEFAULT_TILE_K 1024
 
 static double *Abuf = NULL;
 static double *Bbuf = NULL;
@@ -109,6 +109,18 @@ static void init_pack_buffer(int M, int N, int K)
     }
 }
 
+static void decide_tile_size(int M, int N, int K, int *tile_m, int *tile_n, int *tile_k)
+{
+    int nt_m = CEIL_DIV(M, DEFAULT_TILE_M);
+    *tile_m = CEIL(CEIL_DIV(M, nt_m), BM);
+
+    int nt_n = CEIL_DIV(N, DEFAULT_TILE_N);
+    *tile_n = CEIL(CEIL_DIV(N, nt_n), BN);
+
+    int nt_k = CEIL_DIV(N, DEFAULT_TILE_N);
+    *tile_k = CEIL_DIV(K, nt_k);
+}
+
 void dgemm_v3(DGEMM_FUNC_SIGNITURE)
 {
     if (M % BM != 0 || N % BN != 0) {
@@ -117,6 +129,9 @@ void dgemm_v3(DGEMM_FUNC_SIGNITURE)
     }
 
     init_pack_buffer(M, N, K);
+    
+    int TILE_M, TILE_N, TILE_K;
+    decide_tile_size(M, N, K, &TILE_M, &TILE_N, &TILE_K);
 
     // tiling
     for (int tn = 0; tn < N; tn += TILE_N) {
