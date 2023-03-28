@@ -74,9 +74,9 @@ static void kernel_n24m8(const double * __restrict__ A, const double * __restric
         out[1] = _mm512_fmadd_pd(v_alpha, c[i * 3 + 1], out[1]);
         out[2] = _mm512_fmadd_pd(v_alpha, c[i * 3 + 2], out[2]);
 
-        _mm512_stream_pd(C + i * ldc + 0,  out[0]);
-        _mm512_stream_pd(C + i * ldc + 8,  out[1]);
-        _mm512_stream_pd(C + i * ldc + 16, out[2]);
+        _mm512_store_pd(C + i * ldc + 0,  out[0]);
+        _mm512_store_pd(C + i * ldc + 8,  out[1]);
+        _mm512_store_pd(C + i * ldc + 16, out[2]);
     }
 }
 
