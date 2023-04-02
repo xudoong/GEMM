@@ -18,6 +18,7 @@
 #define DGEMM_FUNC_SIGNITURE int M, int N, int K, double alpha, const double *A, int lda, const double *B, int ldb, double beta, double *C, int ldc
 
 void dgemm_mkl(DGEMM_FUNC_SIGNITURE);
+void dgemm_openblas(DGEMM_FUNC_SIGNITURE);
 void dgemm_naive(DGEMM_FUNC_SIGNITURE);
 void dgemm_ideal(DGEMM_FUNC_SIGNITURE);
 void dgemm_vec(DGEMM_FUNC_SIGNITURE);
@@ -25,6 +26,7 @@ void dgemm_mypack(DGEMM_FUNC_SIGNITURE);
 void dgemm_v1(DGEMM_FUNC_SIGNITURE);
 void dgemm_v2(DGEMM_FUNC_SIGNITURE);
 void dgemm_v3(DGEMM_FUNC_SIGNITURE);
+void dgemm_v4(DGEMM_FUNC_SIGNITURE);
 
 void scale(double *v, int len, double scale);
 

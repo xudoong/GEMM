@@ -62,12 +62,14 @@ int main(int argc, char **argv)
 
     /* Start test */
     test_one(m, n, k, alpha, beta, A, B, C, repeat, &dgemm_mkl, "MKL");
+    // test_one(m, n, k, alpha, beta, A, B, C, repeat, &dgemm_openblas, "OBLAS");
     // test_one(m, n, k, alpha, beta, A, B, C, repeat, &dgemm_ideal, "IDEAL");
     // test_one(m, n, k, alpha, beta, A, B, C, repeat, &dgemm_vec, "VEC");
     // test_one(m, n, k, alpha, beta, A, B, C, repeat, &dgemm_mypack, "PACK");
     // test_one(m, n, k, alpha, beta, A, B, C, repeat, &dgemm_v1, "v1");
     // test_one(m, n, k, alpha, beta, A, B, C, repeat, &dgemm_v2, "v2");
     test_one(m, n, k, alpha, beta, A, B, C, repeat, &dgemm_v3, "v3");
+    test_one(m, n, k, alpha, beta, A, B, C, repeat, &dgemm_v4, "v4");
 
 
     _mm_free(A);

@@ -76,3 +76,19 @@ From the table it can be seen that when there are small marginal tiles, the perf
 
 Update: row V3.1 is the result after adjusting the tile size based on input MNK size. 
 
+## V4
+
+Updates from V3:
+* Tiling based on OpenBLAS: smaller M (=192) and K (=384);
+* The buffer size is no longer equal to input size. Instead the max buffer size is tile A/B size.
+* The inner tile loop on N is splited to two steps. An extra first step (tn = 0)is added to load tile A to buffer.
+
+| MNK  | 240 | 384 | 480 | 768 | 960 | 1200 | 1440 | 1920 | 2400 | 3840 |
+|------|-----|-----|-----|-----|-----|------|------|------|------|------|
+| V4   | 34  | 93  | 78  | 77  | 75  | 75   | 77   | 80   | 77   | 75   |
+
+From the above table it seems V4 is no better than V3. But V3 performs poorly when M,N is far from square shape, especially when M,K are large. In this case A is read many times from memory.
+* (M, N, K)=(256,3840,1024): (V3, V4)=(62%, 68%)
+* (M, N, K)=(4096,384,1024): (V3, V4)=(67%, 72%)
+* (M, N, K)=(4096,384,2048): (V3, V4)=(63%, 71%)
+* (M, N, K)=(4096,384,4096): (V3, V4)=(49%, 70%)
