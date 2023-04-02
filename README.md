@@ -92,3 +92,17 @@ From the above table it seems V4 is no better than V3. But V3 performs poorly wh
 * (M, N, K)=(4096,384,1024): (V3, V4)=(67%, 72%)
 * (M, N, K)=(4096,384,2048): (V3, V4)=(63%, 71%)
 * (M, N, K)=(4096,384,4096): (V3, V4)=(49%, 70%)
+
+### Update
+
+Previously when computing the Tile with size (TileM, TileN, TileK) = (8192, 192, 384), the loop order is NMK. Thus TileA is read once in each innermost loop. It is better to move TileB, which is smaller than TileA, to the innermost, for better locality. This is motivated by the OpenBLAS reference paper ([link](https://www.cs.utexas.edu/~flame/pubs/GotoTOMS_revision.pdf)). It says the panel shaped large tile TileA (in the paper is TileB) is designed to fit into half the L2 cache.
+
+ After adopted this change, we got the following result:
+
+| MNK  | 240 | 384 | 480 | 768 | 960 | 1200 | 1440 | 1920 | 2400 | 3840 |
+|------|-----|-----|-----|-----|-----|------|------|------|------|------|
+| MKL  | 68  | 70  | 78  | 77  | 81  | 77   | 82   | 78   | 80   | 82   |
+| REF  | 68  | 56  | 68  | 80  | 79  | 80   | 81   | 87   | 83   | 86   |
+| V4   | 68  | 70  | 78  | 83  | 81  | 80   | 81   | 82   | 80   | 82   |
+
+In this table, REF refers to the kernel version 18 in the repo [Optimizing-DGEMM-on-Intel-CPUs-with-AVX512F](https://github.com/yzhaiustc/Optimizing-DGEMM-on-Intel-CPUs-with-AVX512F). It can be seen that the updated V4 version performs on par with MKL. The REF version achieves very high perfromance when MNK is large (86%, 87%). The REF implementation is based on OpenBLAS. These two kernels process two rows (columns) of vector broadcast and fmadd at the same time. Maybe this can boost performance. Also note that the REF repo process in col major order. The meaning of matrix A and B in my implementation and the REF implementation is in opposite.

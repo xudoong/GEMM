@@ -3,4 +3,4 @@
 **/ref.*
 src/dgemm_ideal.c
 **/*.s
-
+vtune_result**/**

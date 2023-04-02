@@ -169,16 +169,16 @@ void dgemm_v4(DGEMM_FUNC_SIGNITURE)
                 int Nt = MIN(TILE_N, N - tn);
                 int Kt = MIN(TILE_K, K - tk);
 
-                for (int bn = 0; bn < Nt; bn += BN) {
-                    int Nb = MIN(BN, Nt - bn);
-
-                    int Bbuf_offset = bn * Kt;
-                    do_packB_bn(Bbuf_offset, bn, Kt, Nb, ldb, Bp);
-
-                    for (int bm = 0; bm < Mt; bm += BM) {
+                for (int bm = 0; bm < Mt; bm += BM) {
+                    for (int bn = 0; bn < Nt; bn += BN) {
                         int Mb = MIN(BM, Mt - bm);
                         int Abuf_offset = bm * Kt;
 
+                        int Nb = MIN(BN, Nt - bn);
+                        int Bbuf_offset = bn * Kt;
+                        if (bm == 0)
+                            do_packB_bn(Bbuf_offset, bn, Kt, Nb, ldb, Bp);
+   
                         double beta_or_1 = (tk == 0) ? beta : 1;
                         kernel_n24m8(Abuf + Abuf_offset, Bbuf + Bbuf_offset, Cp + bm * ldc + bn, ldc, Kt, alpha, beta_or_1);
                     }
