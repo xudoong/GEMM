@@ -19,5 +19,6 @@
 
 void dgemm_omp_mkl(DGEMM_FUNC_SIGNITURE);
 void dgemm_omp_v1(DGEMM_FUNC_SIGNITURE);
+void dgemm_omp_v2(DGEMM_FUNC_SIGNITURE);
 
 #endif

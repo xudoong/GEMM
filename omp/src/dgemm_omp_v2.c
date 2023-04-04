@@ -8,8 +8,8 @@
 #define DEFAULT_TILE_N 192
 #define DEFAULT_TILE_K 384
 
-static int Abuf_len = 2 * DEFAULT_TILE_M * DEFAULT_TILE_K;
-static int Bbuf_len = 2 * DEFAULT_TILE_N * DEFAULT_TILE_K;
+static const int Abuf_len = 2 * DEFAULT_TILE_M * DEFAULT_TILE_K;
+static const int Bbuf_len = 2 * DEFAULT_TILE_N * DEFAULT_TILE_K;
 
 static void kernel_n24m8(const double * __restrict__ A, const double * __restrict__ B, double * __restrict__ C, const int ldc, const int Kt, double alpha, double beta)
 {
@@ -90,16 +90,6 @@ static void do_packB_bn(double *Bbuf, int bn, int Kt, int Nb, int ldb, const dou
             Bbuf[k * Nb + j] = Bp[k * ldb + bn + j];
 }
 
-static void init_pack_buffer(double **Abuf, double **Bbuf)
-{
-    if (*Abuf == NULL) {
-        *Abuf = (double *) _mm_malloc(Abuf_len * sizeof(double), 64);
-    }
-    if (*Bbuf == NULL) {
-        *Bbuf = (double *) _mm_malloc(Bbuf_len * sizeof(double), 64);
-    }
-}
-
 static void decide_tile_size(int M, int N, int K, int *tile_m, int *tile_n, int *tile_k)
 {
     *tile_m = DEFAULT_TILE_M;
@@ -114,19 +104,23 @@ static void check_input(int M, int N) {
     }
 }
 
-void dgemm_omp_v1_job(DGEMM_FUNC_SIGNITURE, double *Abuf, double *Bbuf)
+void dgemm_omp_v2(DGEMM_FUNC_SIGNITURE)
 {
     check_input(M, N);
 
     int TILE_M, TILE_N, TILE_K;
     decide_tile_size(M, N, K, &TILE_M, &TILE_N, &TILE_K);
 
+    double Abuf[Abuf_len] __attribute__((aligned(64)));
 
+    
     // tiling
     for (int tm = 0; tm < M; tm += TILE_M) {
         for (int tk = 0; tk < K; tk += TILE_K) {
             // the loop tn=0 is responsable for pack A
             {
+                double Bbuf_tn0[Bbuf_len] __attribute__((aligned(64)));
+
                 int tn = 0;
                 const double *Ap = A + tm * lda + tk;
                 const double *Bp = B + tk * ldb + tn;
@@ -136,12 +130,14 @@ void dgemm_omp_v1_job(DGEMM_FUNC_SIGNITURE, double *Abuf, double *Bbuf)
                 int Nt = MIN(TILE_N, N - tn);
                 int Kt = MIN(TILE_K, K - tk);
 
+                #pragma omp parallel for
                 for (int bn = 0; bn < Nt; bn += BN) {
                     int Nb = MIN(BN, Nt - bn);
                     int Bbuf_offset = bn * Kt;
-                    do_packB_bn(Bbuf + Bbuf_offset, bn, Kt, Nb, ldb, Bp);
+                    do_packB_bn(Bbuf_tn0 + Bbuf_offset, bn, Kt, Nb, ldb, Bp);
                 }
 
+                #pragma omp parallel for
                 for (int bm = 0; bm < Mt; bm += BM) {
                     int Mb = MIN(BM, Mt - bm);
                     int Abuf_offset = bm * Kt;
@@ -153,92 +149,44 @@ void dgemm_omp_v1_job(DGEMM_FUNC_SIGNITURE, double *Abuf, double *Bbuf)
                         int Bbuf_offset = bn * Kt;
 
                         double beta_or_1 = (tk == 0) ? beta : 1;
-                        kernel_n24m8(Abuf + Abuf_offset, Bbuf + Bbuf_offset, Cp + bm * ldc + bn, ldc, Kt, alpha, beta_or_1);
+                        kernel_n24m8(Abuf + Abuf_offset, Bbuf_tn0 + Bbuf_offset, Cp + bm * ldc + bn, ldc, Kt, alpha, beta_or_1);
                     }
                 }
                 
             }
 
-            for (int tn = TILE_N; tn < N; tn += TILE_N) {
-                const double *Ap = A + tm * lda + tk;
-                const double *Bp = B + tk * ldb + tn;
-                double *Cp = C + tm * ldc + tn;
+            #pragma omp parallel 
+            {
+                double local_Bbuf[Bbuf_len] __attribute__((aligned(64)));
 
-                int Mt = MIN(TILE_M, M - tm);
-                int Nt = MIN(TILE_N, N - tn);
-                int Kt = MIN(TILE_K, K - tk);
+                #pragma omp for
+                for (int tn = TILE_N; tn < N; tn += TILE_N) {
+                    const double *Ap = A + tm * lda + tk;
+                    const double *Bp = B + tk * ldb + tn;
+                    double *Cp = C + tm * ldc + tn;
 
-                for (int bm = 0; bm < Mt; bm += BM) {
-                    for (int bn = 0; bn < Nt; bn += BN) {
-                        int Mb = MIN(BM, Mt - bm);
-                        int Abuf_offset = bm * Kt;
+                    int Mt = MIN(TILE_M, M - tm);
+                    int Nt = MIN(TILE_N, N - tn);
+                    int Kt = MIN(TILE_K, K - tk);
 
-                        int Nb = MIN(BN, Nt - bn);
-                        int Bbuf_offset = bn * Kt;
-                        if (bm == 0)
-                            do_packB_bn(Bbuf + Bbuf_offset, bn, Kt, Nb, ldb, Bp);
-   
-                        double beta_or_1 = (tk == 0) ? beta : 1;
-                        kernel_n24m8(Abuf + Abuf_offset, Bbuf + Bbuf_offset, Cp + bm * ldc + bn, ldc, Kt, alpha, beta_or_1);
+                    for (int bm = 0; bm < Mt; bm += BM) {
+                        for (int bn = 0; bn < Nt; bn += BN) {
+                            int Mb = MIN(BM, Mt - bm);
+                            int Abuf_offset = bm * Kt;
+
+                            int Nb = MIN(BN, Nt - bn);
+                            int Bbuf_offset = bn * Kt;
+                            if (bm == 0)
+                                do_packB_bn(local_Bbuf + Bbuf_offset, bn, Kt, Nb, ldb, Bp);
+    
+                            double beta_or_1 = (tk == 0) ? beta : 1;
+                            kernel_n24m8(Abuf + Abuf_offset, local_Bbuf + Bbuf_offset, Cp + bm * ldc + bn, ldc, Kt, alpha, beta_or_1);
+                        }
                     }
                 }
             }
+
         }
 
-    }
-}
-
-void dgemm_omp_v1(DGEMM_FUNC_SIGNITURE) {
-    check_input(M, N);
-
-    int domain_m_size, domain_n_size;
-    int p, q;
-    int max_num_threads = omp_get_max_threads();
-
-    /* get C 2D partition scheme */
-    switch (max_num_threads)
-    {
-        case 1:
-            p = 1;
-            q = 1;
-        case 2:
-            p = 1;
-            q = 2;
-        case 4:
-            p = 2;
-            q = 2;
-            break;
-        case 8:
-            p = 4;
-            q = 2;
-            break;
-        case 16:
-            p = 4;
-            q = 4;
-            break;
-        default:
-            printf("This omp_num_thread is not implemented.\n");
-            exit(-1);
-            break;
-    }
-    domain_m_size = M / p;
-    domain_n_size = N / q;
-
-    /* parallel run*/
-    #pragma omp parallel for collapse(2)
-    for (int i = 0; i < M; i += domain_m_size) {
-        for (int j = 0; j < N; j += domain_n_size) {
-            const double *Ap = A + i * K;
-            const double *Bp = B + j;
-            double *Cp = C + i * N + j;
-
-            double *Abuf=NULL, *Bbuf=NULL;
-            init_pack_buffer(&Abuf, &Bbuf);
-
-            dgemm_omp_v1_job(domain_m_size, domain_n_size, K, alpha, Ap, lda, Bp, ldb, beta, Cp, ldc, Abuf, Bbuf);
-
-            _mm_free(Abuf);
-            _mm_free(Bbuf);
-        }
     }
 }

@@ -36,7 +36,7 @@ int main(int argc, char** argv)
     int m, n, k, i, j;
     double alpha, beta;
 
-    m = n = k = 128;
+    m = n = k = 768;
     alpha = 1.0; beta = 2.0;
 
     if (argc == 2) {
@@ -64,6 +64,7 @@ int main(int argc, char** argv)
     /* Start test */
     test_one(m, n, k, alpha, beta, A, B, C, C_corr, &dgemm_omp_mkl, "mkl");
     test_one(m, n, k, alpha, beta, A, B, C, C_corr, &dgemm_omp_v1, "v1");
+    test_one(m, n, k, alpha, beta, A, B, C, C_corr, &dgemm_omp_v2, "v2");
 
     _mm_free(A);
     _mm_free(B);

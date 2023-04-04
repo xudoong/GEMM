@@ -60,7 +60,7 @@ void test_one(int m, int n, int k, double alpha, double beta, double *A, double 
     const double MAX_GFLOPs = max_ghz * 2 * 2 * (512 / 64) * num_threads;
     time_sec = timespec_to_second(start, finish);
     double GFLOPs = (1.0 * m * k * n * 2 * repeat) / time_sec / 1e9;
-    printf("[%s] m=%d,n=%d,k=%d GFLOPS=%.1f (%.0f%%)\n", name, m, n, k, GFLOPs, GFLOPs / MAX_GFLOPs * 100);
+    printf("[%4s] m=%d,n=%d,k=%d GFLOPS=%4.0f (%.0f%%)\n", name, m, n, k, GFLOPs, GFLOPs / MAX_GFLOPs * 100);
 }
 
 
@@ -71,7 +71,7 @@ int main(int argc, char **argv)
     int repeat;
     double alpha, beta;
 
-    m = 512, k = 512, n = 512;
+    m = 768, k = 768, n = 768;
     alpha = 2.0; beta = 2.0;
 
     if (argc == 2) {
@@ -99,10 +99,9 @@ int main(int argc, char **argv)
         C[i] = (double)i;
     }
 
-    printf("omp_max_threads=%d\n", omp_get_max_threads());
-    
     /* Start test */
     test_one(m, n, k, alpha, beta, A, B, C, &dgemm_omp_mkl, "mkl");
+    test_one(m, n, k, alpha, beta, A, B, C, &dgemm_omp_v2, "v2");
     test_one(m, n, k, alpha, beta, A, B, C, &dgemm_omp_v1, "v1");
 
 
