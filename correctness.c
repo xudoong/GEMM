@@ -11,7 +11,6 @@ void test_one(int m, int n, int k, double alpha, double beta, const double *A, c
         C[i] = C_corr[i] = 1.0;
     }
 
-    // warmup doesn't count
     (*fun_ptr)(m, n, k, alpha, A, k, B, n, beta, C, n);
     dgemm_mkl(m, n, k, alpha, A, k, B, n, beta, C_corr, n);
 
@@ -64,12 +63,14 @@ int main(int argc, char** argv)
 
     /* Start test */
     test_one(m, n, k, alpha, beta, A, B, C, C_corr, &dgemm_mkl, "MKL");
+    // test_one(m, n, k, alpha, beta, A, B, C, C_corr, &dgemm_openblas, "OBLAS");
     // test_one(m, n, k, alpha, beta, A, B, C, C_corr, &dgemm_ideal, "ideal");
     // test_one(m, n, k, alpha, beta, A, B, C, C_corr, &dgemm_vec, "VEC");
     // test_one(m, n, k, alpha, beta, A, B, C, C_corr, &dgemm_mypack, "PACK");
-    test_one(m, n, k, alpha, beta, A, B, C, C_corr, &dgemm_v1, "v1");
-    test_one(m, n, k, alpha, beta, A, B, C, C_corr, &dgemm_v2, "v2");
+    // test_one(m, n, k, alpha, beta, A, B, C, C_corr, &dgemm_v1, "v1");
+    // test_one(m, n, k, alpha, beta, A, B, C, C_corr, &dgemm_v2, "v2");
     test_one(m, n, k, alpha, beta, A, B, C, C_corr, &dgemm_v3, "v3");
+    test_one(m, n, k, alpha, beta, A, B, C, C_corr, &dgemm_v4, "v4");
 
 
     _mm_free(A);

@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <time.h>
-#include "mkl.h"
 #include "omp.h"
 
 #include "dgemm_omp.h"
@@ -54,7 +53,7 @@ void test_one(int m, int n, int k, double alpha, double beta, double *A, double 
     clock_gettime(CLOCK_MONOTONIC, &finish);
 
     // get max GHz
-    int num_threads = mkl_get_max_threads(); // Note: this is correct only when running in a single socket
+    int num_threads = omp_get_max_threads(); // Note: this is correct only when running in a single socket
     double max_ghz = get_max_ghz(num_threads);
 
     const double MAX_GFLOPs = max_ghz * 2 * 2 * (512 / 64) * num_threads;

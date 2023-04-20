@@ -21,13 +21,19 @@ The last row "Efficiency" is the percentage between the achieved GFLOPS and the 
 
 Note that the max frequency varies when #cores changes with AVX-512 on. Therefore we can not directly compare the efficiency between different cores.
 
+## OpenBLAS Performance
+Same as MKL test, we fix M=N=K=3840. The result is as follows:
+| #cores     | 1  | 2   | 3   | 4   | 5   | 6   | 7   | 8   | 9   | 10  | 11  | 12   | 13   | 14   | 15   | 16   | 17   | 18   | 19   | 20   |
+|------------|----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|------|------|------|------|------|------|------|------|------|
+| Efficiency | 87 | 87  | 89  | 86  | 91  | 88  | 73  | 78  | 88  | 90  | 87  | 84   | 87   | 84   | 83   | 82   | 79   | 81   | 76   | 74   |
+
 ## V1
 The most straight forward way to omp parallize the serial code is to split the Matrix C. Each thread is responsable for a submatrix of C. The result is as follows: (M=N=K=3840)
 | #cores     | 1  | 2  | 4  | 8  | 16 |
 |------------|----|----|----|----|----|
 | Efficiency | 84 | 84 | 80 | 74 | 73 |
 
-The efficiency degrades when #cores increases. This is probably because this strategy push too much pressure on the shared resources: L3 and memory: the whole A, B, C matrix is read and written in parallel. (*But a question is: is memory bandwidth really a bottleneck? If not, then the performance degration must due to the memory latency. Can we hide this?*)
+The efficiency degrades when #cores increases. This is probably because this strategy push too much pressure on the shared resources: L3 and memory: the whole A, B, C matrix is read and written in parallel. (*But a question is: is memory bandwidth really a bottleneck? If not, then the performance degration must be due to the memory latency. Can we hide this?*)
 
 ## V2
 This version is a more fine-grained parallel strategy. During the phase to process 8192x384 A and 384xN B, the serial code (v4) split the N dimension into length 192 tiles and iterate among these tiles. This version to parallize is to dispatch thest tiles to the threads. The result is as follows: (M=N=K=3840)
@@ -37,3 +43,4 @@ This version is a more fine-grained parallel strategy. During the phase to proce
 
 It can be seen that the efficiency scales better than V1. But a severe problem is that there are not so much work to dispatch (3840/192 - 1 = 19), which results in work unbalance and leads to the performance drop when #cores=18.
 
+When MNK=4032(192x21) and #cores=20, we got MKL%=90% and V2%=80%. A noteable thing is the efficiency increase (from 82% to 90%) of MKL comparing MNK=3840(192x20).

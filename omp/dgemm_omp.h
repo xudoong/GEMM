@@ -18,6 +18,7 @@
 #define DGEMM_FUNC_SIGNITURE int M, int N, int K, double alpha, const double *A, int lda, const double *B, int ldb, double beta, double *C, int ldc
 
 void dgemm_omp_mkl(DGEMM_FUNC_SIGNITURE);
+void dgemm_omp_openblas(DGEMM_FUNC_SIGNITURE);
 void dgemm_omp_v1(DGEMM_FUNC_SIGNITURE);
 void dgemm_omp_v2(DGEMM_FUNC_SIGNITURE);
 
