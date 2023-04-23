@@ -149,6 +149,9 @@ void run_kernel(int kernel_num, cublasHandle_t handle, DGEMM_FUNC_SIGNITURE)
     case 2:
         dgemm_02_ideal(DGEMM_FUNC_PARAM);
         break;
+    case 3:
+        dgemm_03_shmem(DGEMM_FUNC_PARAM);
+        break;
     default:
         throw std::invalid_argument("Unknown kernel number");
     }

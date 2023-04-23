@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <cublas_v2.h>
 #include <cuda_runtime.h>
+#include <cassert>
 
 #define CEIL_DIV(M, N) (((M) + (N) - 1) / (N))
 
@@ -15,3 +16,4 @@
 void dgemm_00_cublas(cublasHandle_t handle, DGEMM_FUNC_SIGNITURE);
 void dgemm_01_naive(DGEMM_FUNC_SIGNITURE);
 void dgemm_02_ideal(DGEMM_FUNC_SIGNITURE);
+void dgemm_03_shmem(DGEMM_FUNC_SIGNITURE);
