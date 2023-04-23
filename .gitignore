@@ -1,7 +1,8 @@
 **/*.x
 .vscode/*
 **/ref.*
-src/dgemm_ideal.c
+cpu_serial/src/dgemm_ideal.c
 **/*.s
 **/vtune_result*/**
-mkl_examples/**
+cpu_serial/mkl_examples/**
+cuda/build*/

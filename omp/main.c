@@ -99,7 +99,8 @@ int main(int argc, char **argv)
     }
 
     /* Start test */
-    test_one(m, n, k, alpha, beta, A, B, C, &dgemm_omp_mkl, "mkl");
+    // test_one(m, n, k, alpha, beta, A, B, C, &dgemm_omp_mkl, "mkl");
+    test_one(m, n, k, alpha, beta, A, B, C, &dgemm_omp_openblas, "openblas");
     test_one(m, n, k, alpha, beta, A, B, C, &dgemm_omp_v2, "v2");
     test_one(m, n, k, alpha, beta, A, B, C, &dgemm_omp_v1, "v1");
 
