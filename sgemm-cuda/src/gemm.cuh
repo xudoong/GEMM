@@ -17,3 +17,5 @@ void gemm_00_cublas(cublasHandle_t handle, GEMM_FUNC_SIGNITURE);
 void gemm_01_naive(GEMM_FUNC_SIGNITURE);
 void gemm_02_ideal(GEMM_FUNC_SIGNITURE);
 void gemm_03_shmem(GEMM_FUNC_SIGNITURE);
+void gemm_04_warp_tiling(GEMM_FUNC_SIGNITURE);
+void gemm_05_shmem_plus_vectorize(GEMM_FUNC_SIGNITURE);

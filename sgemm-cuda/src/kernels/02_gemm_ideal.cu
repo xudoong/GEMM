@@ -7,7 +7,7 @@ __global__ static void kernel_gemm_ideal(GEMM_FUNC_SIGNITURE) {
     const uint y = blockIdx.y * blockDim.y + threadIdx.y;
 
     if (x < M && y < N) {
-        double tmp = 0.0;
+        float tmp = 0.0;
         for (int k = 0; k < K; k++) {
             tmp += A[0] * B[0];
         }

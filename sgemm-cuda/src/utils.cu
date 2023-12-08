@@ -152,6 +152,12 @@ void run_kernel(int kernel_num, cublasHandle_t handle, GEMM_FUNC_SIGNITURE)
     case 3:
         gemm_03_shmem(GEMM_FUNC_PARAM);
         break;
+    case 4:
+        gemm_04_warp_tiling(GEMM_FUNC_PARAM);
+        break;
+    case 5:
+        gemm_05_shmem_plus_vectorize(GEMM_FUNC_PARAM);
+        break;
     default:
         throw std::invalid_argument("Unknown kernel number");
     }

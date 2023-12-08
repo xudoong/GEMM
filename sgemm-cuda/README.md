@@ -4,22 +4,41 @@ This directory is built upon [siboehm-SGEMM_CUDA](https://github.com/siboehm/SGE
 
 The experiments run on one A100 GPU.
 
-First I evaluted the performance of the kernels from the reference implementation ( [siboehm-SGEMM_CUDA](https://github.com/siboehm/SGEMM_CUDA)). The achieved TFLOPS when M=N=K=4096 is as follows.
+### MY result
 
-|         | K0 cuBLAS | K1 Naive | K2 GMEM Coalescing | K3 SMEM Caching | K4 1D Blocktiling | K5 2D Blocktiling | K6 Vectorized Mem Access | K7 Avoid Bank Conflicts (Linearize) | K8 Avoid Bank Conflicts (Offset) | K9 Autotuning | K10 Warptiling |
-| ------- | --------- | -------- | ------------------ | --------------- | ----------------- | ----------------- | ------------------------ | ----------------------------------- | -------------------------------- | ------------- | -------------- |
-| TFLOPS  | 18.14     | 0.29     | 3.01               | 5.44            | 10.20             | 14.47             | 15.37                    | 15.28                               | 14.95                            | 15.86         | 16.78          |
-| %cuBLAS | 100%      | 1.6%     | 16.6%              | 30%             | 56.2%             | 79.8%             | 84.7%                    | 84.2%                               | 82.4%                            | 87.4%         | 92.5%          |
+|                         | **Median TFLOPS** | **STD** | **%cuBLAS** |
+| ----------------------- | ----------------- | ------- | ----------- |
+| **K0 cuBLAS**           | 17.6              | 0.41    | 100%        |
+| **K1** **ideal (FAKE)** | 18.6              | -       | --          |
+| **K3 shmem**            | 15.8              | 0.38    | 90%         |
+| **K4 warptiling**       | 15.1              | 0.4     | 86%         |
+| **K5 shmem+vectorize**  | 15.9              | 0.46    | 90%         |
+
+Adding more optimizations to K3  doesn't provide speedup.
+
+### REF result
+
+First I evaluted the performance of the kernels from the reference implementation ( [siboehm-SGEMM_CUDA](https://github.com/siboehm/SGEMM_CUDA)). The achieved TFLOPS when M=N=K=4096 is as follows. Due to the performance variation, each kernel test is repeated 30 times, and the meidan and std TFLOPS are reported.
+
+|                                     | Median TFLOPS | Std  | %cuBLAS |
+| ----------------------------------- | ------------- | ---- | ------- |
+| K0 cuBLAS                           | 17.6          | 0.41 | 100%    |
+| K5 2D Blocktiling                   | 13.4          | 0.31 | 76%     |
+| K6 Vectorized Mem Access            | 14.2          | 0.4  | 81%     |
+| K7 Avoid Bank Conflicts (Linearize) | 14.3          | 0.36 | 81%     |
+| K8 Avoid Bank Conflicts (Offset)    | 13.75         | 0.41 | 78%     |
+| K9 Autotuning                       | 14.9          | 0.41 | 85%     |
+| K10 Warptiling                      | 16.2          | 0.48 | 92%     |
 
 It can be seen that just using shared memroy plus 2D thread-level tiling could achieve 80% efficiency (relative to cuBLAS).
 
 ### Huge performance gap with tiny cuda code difference
 
-Seen the reference kernel could obtain 80% efficiency with merely *shared memory plus 2D tiling*,  I re-implemented this  [kernel](./src/kernels/03_gemm_shmem.cu) by myself,  and found that it only achieved **12TFLOPS** (2.5-3 TFLOPS lower than the ref). 
+Seen the reference kernel could obtain nearly 80% efficiency with merely *shared memory plus 2D tiling*,  I re-implemented this  [kernel](./src/kernels/03_gemm_shmem.cu) by myself,  and found that it only achieved **12TFLOPS** (~2 TFLOPS lower than the ref). 
 
 At the first galance, the computation logic and the hyper parameters are the same as the ref kernel, so I modified my code line by line, to make it be identical with the [ref](https://github.com/siboehm/SGEMM_CUDA/blob/master/src/kernels/5_kernel_2D_blocktiling.cuh). 
 
-In this way, I found two code pieces where two seemingly same expression leads to several 100GLFOPS performance gap.
+In this way, I found two code pieces where two seemingly same expression leads to several hunderds GLFOPS performance gap.
 
 #### 1) The for loop index and offset in loading to shared memory
 
@@ -58,7 +77,7 @@ const int BLOCK_DIM_Y = 16;
 
 // inside the gemm kernel
 {
-	const int tid = threadIdx.x + threadIdx.y * blockDim.x;
+    const int tid = threadIdx.x + threadIdx.y * blockDim.x;
 }
 
  ... 
@@ -75,7 +94,7 @@ const int BLOCK_DIM_Y = 16;
 
 // inside the gemm kernel
 {
-	const int tid = threadIdx.x;
+    const int tid = threadIdx.x;
 }
 
  ... 
@@ -98,7 +117,4 @@ I verified that without altering the remaining code, the first version is 13.5TF
 
 Combining 1) and 2), the 15.5TFLOPS is achieved only when the fast versions are used for both 1) and 2), while in the other cases, the performance is 13.5TFLOPS.
 
-This may be relevant to the compiler optimizations, partly proves the power of the compiler. I haved compared the ptx and sass assembly code of the two versions, but they appears the same to me. So I couldn't explain the reason for this 2TFLOPS performance gap for now.
-
-
-
+This may be relevant to the compiler optimizations, partly proving the power of the compiler. I haved compared the *ptx* and *sass* assembly code of the two versions, and found that in version1 the FMA loop over *k*  is autometicly unrolled while in version 2 it is not, but after unrolling this loop in version1 using `pragma` unroll, there is still ~1TFLOPS performance gap, and I couldn't observe other noteable difference between the two sass code.
