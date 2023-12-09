@@ -13,8 +13,22 @@ The experiments run on one A100 GPU.
 | **K3 shmem**            | 15.8              | 0.38    | 90%         |
 | **K4 warptiling**       | 15.1              | 0.4     | 86%         |
 | **K5 shmem+vectorize**  | 15.9              | 0.46    | 90%         |
+| **K6 cutlass (ref)**    | 16.1              | 0.52    | 91%         |
 
-Adding more optimizations to K3  doesn't provide speedup.
+The performance of the simple kernel 03 (shared memory plus 2D tiling on threads) is very close to that of cutlass.
+Adding more optimizations to Kernel 03 doesn't provide speedup.
+
+**Re-timing using Nsight**
+
+|                    | TFLOPS | %theoretical |
+| ------------------ | ------ | ------------ |
+| K0 cuBLAS          | 19.1   | 97.85%       |
+| K6 cutlass         | 17.5   | 89.62%       |
+| K3 shmem           | 16.7   | 85.70%       |
+| K4 warptiling      | 16.6   | 85.24%       |
+| K5 shmem+vectorize | 17     | 87.15%       |
+
+From the result from Nsight, K5 does provide speed up over K3, but K4 still doesn't. Moreover, different from the timing result from `cudaEventRecord`, which has a std deviation up to 400GFLOPS, the result in Nsight is very stable, and the durating for each kernel are shorter.
 
 ### REF result
 

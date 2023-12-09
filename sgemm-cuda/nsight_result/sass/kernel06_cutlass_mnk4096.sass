@@ -1,0 +1,2290 @@
+
+Kernel
+      IMAD.MOV.U32 R1, RZ, RZ, c[0x0][0x28] 
+      S2R R0, SR_CTAID.Y 
+      IMAD.MOV.U32 R2, RZ, RZ, -0x1 
+      S2R R5, SR_CTAID.X 
+      SHF.L.U32 R2, R2, c[0x0][0x178], RZ 
+      SHF.L.U32 R0, R0, c[0x0][0x178], RZ 
+      LOP3.LUT R3, R5, R2, RZ, 0x30, !PT 
+      IADD3 R3, R0, R3, RZ 
+      SHF.R.S32.HI R0, RZ, c[0x0][0x178], R5 
+      ISETP.GE.AND P0, PT, R3, c[0x0][0x170], PT 
+      ISETP.GE.OR P0, PT, R0, c[0x0][0x16c], P0 
+@P0   EXIT 
+      S2UR UR4, SR_CTAID.Z 
+      S2R R4, SR_TID.X 
+      ULDC UR5, c[0x0][0x2a0] 
+      IMAD.MOV.U32 R23, RZ, RZ, RZ 
+      ULDC UR6, c[0x0][0x168] 
+      ULDC.64 UR12, c[0x0][0x118] 
+      UIMAD UR4, UR4, UR5, URZ 
+      SHF.R.S32.HI R5, RZ, 0x1f, R4 
+      UIADD3 UR5, UR4, UR5, URZ 
+      LEA.HI R2, R5, R4, RZ, 0x3 
+      LEA.HI R17, R5, R4, RZ, 0x7 
+      UISETP.LT.AND UP0, UPT, UR5, UR6, UPT 
+      SHF.R.S32.HI R10, RZ, 0x3, R2 
+      LOP3.LUT R5, R2, 0xfffffff8, RZ, 0xc0, !PT 
+      USEL UR5, UR5, UR6, UP0 
+      LOP3.LUT R7, R17, 0xffffff80, RZ, 0xc0, !PT 
+      IMAD R8, R0, 0x80, R10 
+      UIADD3 UR11, -UR4, UR5, URZ 
+      IMAD.IADD R9, R4, 0x1, -R5 
+      IADD3 R2, -R7, R4, RZ 
+      IMAD.WIDE.U32 R6, R8, c[0x0][0x180], RZ 
+      USHF.R.S32.HI UR6, URZ, 0x1f, UR11 
+      SHF.R.S32.HI R0, RZ, 0x1f, R8 
+      IADD3 R11, R9, UR4, RZ 
+      ULEA.HI UR6, UR6, UR11, URZ, 0x3 
+      ISETP.GE.AND P2, PT, R8, c[0x0][0x160], PT 
+      IMAD R5, R0, c[0x0][0x180], RZ 
+      SHF.R.S32.HI R0, RZ, 0x1f, R11 
+      ULOP3.LUT UR6, UR6, 0xfffffff8, URZ, 0xc0, !UPT 
+      IADD3 R13, P0, R11, R6, RZ 
+      IMAD R5, R8, c[0x0][0x184], R5 
+      IADD3 R15, R8, 0x20, RZ 
+      UIADD3 UR6, UR11, -UR6, URZ 
+      LEA R12, P4, R13, c[0x0][0x1a0], 0x2 
+      IMAD.IADD R5, R7, 0x1, R5 
+      ISETP.GE.AND P1, PT, R15, c[0x0][0x160], PT 
+      UISETP.NE.AND UP0, UPT, UR6, URZ, UPT 
+      IADD3 R16, R8, 0x40, RZ 
+      IMAD.X R14, R0, 0x1, R5, P0 
+      IADD3 R8, R8, 0x60, RZ 
+      USEL UR6, UR6, 0x8, UP0 
+      ISETP.GE.AND P0, PT, R16, c[0x0][0x160], PT 
+      LEA.HI.X R13, R13, c[0x0][0x1a4], R14, 0x2, P4 
+      UIADD3 UR7, UR4, UR6, URZ 
+      IADD3 R14, P6, R12, c[0x0][0x188], RZ 
+      IMAD.MOV.U32 R25, RZ, RZ, RZ 
+      LEA.HI.SX32 R17, R17, UR4, 0x19 
+      UISETP.LT.AND UP0, UPT, UR5, UR7, UPT 
+      HFMA2.MMA R27, -RZ, RZ, 0, 0 
+      LEA R2, R3, R2, 0x7 
+      USEL UR5, UR5, UR7, UP0 
+      ISETP.LT.AND P3, PT, R11, UR5, !P2 
+      ISETP.LT.AND P4, PT, R11, UR5, !P1 
+      ISETP.LT.AND P5, PT, R11, UR5, !P0 
+      IADD3.X R15, R13, c[0x0][0x18c], RZ, P6, !PT 
+      IADD3 R18, P6, R14, c[0x0][0x188], RZ 
+@P3   LDG.E.LTC128B R23, [R12.64] 
+      ISETP.GE.AND P3, PT, R8, c[0x0][0x160], PT 
+      SHF.R.S32.HI R8, RZ, 0x1f, R17 
+@P4   LDG.E.LTC128B R25, [R14.64] 
+      IADD3.X R19, R15, c[0x0][0x18c], RZ, P6, !PT 
+      ISETP.LT.AND P4, PT, R11, UR5, !P3 
+      SHF.R.S32.HI R3, RZ, 0x1f, R2 
+      IMAD R12, R8, c[0x0][0x1b0], RZ 
+      IADD3 R20, P6, R18, c[0x0][0x188], RZ 
+@P5   LDG.E.LTC128B R27, [R18.64] 
+      ISETP.GE.AND P5, PT, R2, c[0x0][0x164], PT 
+      IMAD.MOV.U32 R29, RZ, RZ, RZ 
+      IADD3.X R21, R19, c[0x0][0x18c], RZ, P6, !PT 
+      IMAD R31, R17, c[0x0][0x1b4], R12 
+      ISETP.LT.AND P6, PT, R17, UR5, !P5 
+      IMAD.WIDE.U32 R12, R17, c[0x0][0x1b0], R2 
+@P4   LDG.E.LTC128B R29, [R20.64] 
+      IMAD.IADD R15, R13, 0x1, R31 
+      LEA R14, P4, R12, c[0x0][0x1d0], 0x2 
+      CS2R R30, SRZ 
+      IADD3 R13, R17, 0x2, RZ 
+      LEA.HI.X R15, R12, c[0x0][0x1d4], R15, 0x2, P4 
+      ISETP.LT.AND P4, PT, R13, UR5, !P5 
+@P6   LDG.E.LTC128B R31, [R14.64] 
+      IADD3 R12, P6, R14, c[0x0][0x1b8], RZ 
+      IADD3 R16, R17, 0x4, RZ 
+      MOV R21, RZ 
+      IADD3.X R13, R15, c[0x0][0x1bc], RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R16, UR5, !P5 
+@P4   LDG.E.LTC128B R21, [R12.64] 
+      IADD3 R18, P4, R12, c[0x0][0x1b8], RZ 
+      IMAD.MOV.U32 R33, RZ, RZ, RZ 
+      IADD3 R16, R17, 0x6, RZ 
+      IADD3.X R19, R13, c[0x0][0x1bc], RZ, P4, !PT 
+      ISETP.LT.AND P4, PT, R16, UR5, !P5 
+@P6   LDG.E.LTC128B R33, [R18.64] 
+      IADD3 R14, P6, R18, c[0x0][0x1b8], RZ 
+      IMAD.MOV.U32 R35, RZ, RZ, RZ 
+      IADD3.X R15, R19, c[0x0][0x1bc], RZ, P6, !PT 
+@P4   LDG.E.LTC128B R35, [R14.64] 
+      SHF.R.U32.HI R12, RZ, 0x5, R4 
+      SHFL.IDX PT, R12, R12, RZ, 0x1f 
+      R2UR UR4, R12 
+      UISETP.GE.AND UP0, UPT, UR11, 0x1, UPT 
+      USHF.R.S32.HI UR5, URZ, 0x1f, UR4 
+      ULEA.HI UR5, UR5, UR4, URZ, 0x3 
+      ULOP3.LUT UR7, UR5, 0xfffffff8, URZ, 0xc0, !UPT 
+      UIADD3 UR7, UR4, -UR7, URZ 
+      USHF.R.S32.HI UR4, URZ, 0x1f, UR7 
+      ULEA.HI UR4, UR4, UR7, URZ, 0x2 
+      USHF.R.S32.HI UR8, URZ, 0x3, UR5 
+      IMAD R12, R9, 0x84, R10 
+      ULOP3.LUT UR5, UR4, 0xfffffffc, URZ, 0xc0, !UPT 
+      LOP3.LUT R9, R4, 0x1f, RZ, 0xc0, !PT 
+      USHF.R.S32.HI UR10, URZ, 0x2, UR4 
+      SEL R16, RZ, 0xffffffff, P1 
+      UIADD3 UR9, UR7, -UR5, URZ 
+      SEL R18, RZ, 0xffffffff, P5 
+      IMAD.SHL.U32 R10, R4, 0x8, RZ 
+      PLOP3.LUT P1, PT, PT, PT, UP0, 0x80, 0x0 
+      ULEA UR4, UR8, UR10, 0x4 
+      SHF.R.U32.HI R9, RZ, 0x4, R9 
+      IMAD.SHL.U32 R15, R18, 0x2, RZ 
+      UIMAD UR5, UR8, 0x21, UR9 
+      SEL R13, RZ, 0x1, P2 
+      USHF.L.U32 UR4, UR4, 0x4, URZ 
+      SEL R14, RZ, 0x1, P5 
+      SHF.L.U32 R16, R16, 0x1, RZ 
+      LOP3.LUT R10, R10, 0x70, RZ, 0xc0, !PT 
+      SHF.L.U32 R9, R9, 0x1, RZ 
+      IMAD.U32 R37, RZ, RZ, UR5 
+      LOP3.LUT R13, R16, 0x2, R13, 0xe2, !PT 
+      LOP3.LUT R15, R15, 0x2, R14, 0xe2, !PT 
+      IMAD.U32 R39, RZ, RZ, UR4 
+      IADD3 R28, R10, 0x2100, RZ 
+      LOP3.LUT R14, R9, 0xfffffffe, R4, 0xe2, !PT 
+      SEL R16, RZ, 0x4, P0 
+      SEL R9, RZ, 0x8, P3 
+      SEL R18, RZ, 0x4, P5 
+      SEL R19, RZ, 0x8, P5 
+      ISETP.NE.U32.AND P0, PT, RZ, c[0x0][0x288], PT 
+      ISETP.NE.U32.AND P2, PT, RZ, c[0x0][0x290], PT 
+      HFMA2.MMA R52, -RZ, RZ, 0, 0 
+      LOP3.LUT R13, R9, R16, R13, 0xfe, !PT 
+      IMAD R28, R39, 0x10, R28 
+      LOP3.LUT R15, R19, R18, R15, 0xfe, !PT 
+      IMAD R10, R39, 0x10, R10 
+      LEA R14, R37, R14, 0x3 
+      CS2R R84, SRZ 
+      CS2R R80, SRZ 
+      CS2R R70, SRZ 
+      CS2R R68, SRZ 
+      CS2R R46, SRZ 
+      IMAD.MOV.U32 R100, RZ, RZ, RZ 
+      CS2R R44, SRZ 
+      CS2R R76, SRZ 
+      CS2R R66, SRZ 
+      CS2R R56, SRZ 
+      CS2R R106, SRZ 
+      CS2R R94, SRZ 
+      CS2R R88, SRZ 
+      CS2R R78, SRZ 
+      CS2R R58, SRZ 
+      CS2R R62, SRZ 
+      CS2R R108, SRZ 
+      CS2R R104, SRZ 
+      CS2R R92, SRZ 
+      CS2R R64, SRZ 
+      CS2R R110, SRZ 
+      CS2R R82, SRZ 
+      MOV R50, RZ 
+      CS2R R102, SRZ 
+      CS2R R74, SRZ 
+      CS2R R54, SRZ 
+      IMAD.MOV.U32 R113, RZ, RZ, RZ 
+      CS2R R90, SRZ 
+      CS2R R60, SRZ 
+      CS2R R86, SRZ 
+      IMAD.MOV.U32 R48, RZ, RZ, RZ 
+      CS2R R72, SRZ 
+      ISETP.NE.AND.EX P0, PT, RZ, c[0x0][0x28c], PT, P0 
+      ISETP.NE.AND.EX P2, PT, RZ, c[0x0][0x294], PT, P2 
+      LEA R32, R4, 0x2100, 0x2 
+      STS [R12.X4], R23 
+      STS [R12.X4+0x80], R25 
+      STS [R12.X4+0x100], R27 
+      STS [R12.X4+0x180], R29 
+      STS [R4.X4+0x2100], R31 
+      IMAD.MOV.U32 R29, RZ, RZ, RZ 
+      HFMA2.MMA R31, -RZ, RZ, 0, 0 
+      STS [R4.X4+0x2500], R21 
+      STS [R4.X4+0x2900], R33 
+      STS [R4.X4+0x2d00], R35 
+      BAR.SYNC 0x0 
+@!P1  BRA 0x14e695287000 
+      UMOV UR14, 0x3 
+      SHF.L.U64.HI R9, R17, 0x2, R8 
+      ULDC.64 UR16, c[0x0][0x1b8] 
+      IMAD.SHL.U32 R8, R17, 0x4, RZ 
+      UIMAD.WIDE.U32 UR4, UR14, UR16, URZ 
+      IMAD.U32 R7, RZ, RZ, UR6 
+      UIMAD UR14, UR14, UR17, URZ 
+      LEA R4, P1, R6, c[0x0][0x190], 0x2 
+      UISETP.GT.AND UP0, UPT, UR11, 0x8, UPT 
+      IMAD.WIDE R8, R7, 0x4, R8 
+      UIADD3 UR14, UR5, UR14, URZ 
+      LEA.HI.X R5, R6, c[0x0][0x194], R5, 0x2, P1 
+      LDS.128 R24, [R10+0x2100] 
+      IMAD.U32 R7, RZ, RZ, UR5 
+      MOV R33, UR6 
+      IMAD.U32 R6, RZ, RZ, UR4 
+      MOV R7, UR14 
+      IMAD R9, R9, c[0x0][0x1b0], RZ 
+      LDS.128 R16, [R10+0x2180] 
+      IMAD.WIDE R4, R33, 0x4, R4 
+      LEA R33, P1, R2, c[0x0][0x1c0], 0x2 
+      UIADD3 UR6, UR11, 0x7, URZ 
+      LDS.128 R96, [R14.X16] 
+      IMAD.WIDE.U32 R6, R8, c[0x0][0x1b0], R6 
+      PLOP3.LUT P5, PT, PT, PT, UP0, 0x80, 0x0 
+      USHF.R.S32.HI UR7, URZ, 0x1f, UR6 
+      LDS.128 R20, [R14.X16+0x40] 
+      IMAD R35, R8, c[0x0][0x1b4], R9 
+      IADD3 R9, P3, R6, -c[0x0][0x1c8], RZ 
+      ULEA.HI UR7, UR7, UR6, URZ, 0x3 
+      LEA R8, P4, R11, R4, 0x2 
+      UMOV UR19, 0x1 
+      IADD3.X R10, R7, ~c[0x0][0x1cc], R35, P3, !PT 
+      ULEA.HI.SX32 UR11, UR7, 0x1, 0x1d 
+      LEA.HI.X R0, R11, R5, R0, 0x2, P4 
+      IMAD.SHL.U32 R11, R12, 0x4, RZ 
+      IADD3 R8, P3, R8, -c[0x0][0x198], RZ 
+      LEA.HI.X R4, R2, c[0x0][0x1c4], R3, 0x2, P1 
+      IMAD.SHL.U32 R3, R14, 0x10, RZ 
+      IADD3 R14, P1, R33, c[0x0][0x1d0], RZ 
+      IADD3 R8, P4, R8, c[0x0][0x1a0], RZ 
+      IADD3.X R0, R0, ~c[0x0][0x19c], RZ, P3, !PT 
+      IADD3.X R7, R4, c[0x0][0x1d4], RZ, P1, !PT 
+      SEL R6, R13, RZ, P5 
+      IADD3 R2, R28, 0x200, RZ 
+      IADD3 R12, R32, 0x1000, RZ 
+      IADD3 R11, R11, 0x1080, RZ 
+      IADD3 R3, R3, 0x210, RZ 
+      SEL R4, R15, RZ, P5 
+      IADD3.X R13, R0, c[0x0][0x1a4], RZ, P4, !PT 
+      FFMA R41, R26, R97, R54 
+      UMOV UR18, 0x3 
+      FFMA R54, R27, R23, R52 
+      LOP3.LUT R0, R6, 0x2, RZ, 0xc0, !PT 
+      FFMA R87, R24, R96, R87 
+      MOV R15, UR4 
+      FFMA R45, R25, R96, R45 
+      SHF.R.U32.HI R0, RZ, 0x1, R0 
+      FFMA R103, R26, R96, R103 
+      LOP3.LUT P5, RZ, R6, 0x1, RZ, 0xc0, !PT 
+      FFMA R52, R27, R96, R47 
+      ISETP.NE.U32.AND P3, PT, R0, RZ, PT 
+      FFMA R39, R16, R96, R61 
+      ULDC.64 UR16, c[0x0][0x188] 
+      FFMA R72, R17, R96, R72 
+      UIMAD UR15, UR18, UR17, URZ 
+      FFMA R73, R18, R96, R73 
+      FFMA R84, R19, R23, R84 
+      FFMA R81, R19, R22, R81 
+      FFMA R88, R19, R21, R88 
+      FFMA R85, R19, R20, R85 
+      FFMA R82, R19, R99, R82 
+      FFMA R83, R19, R98, R83 
+      FFMA R90, R19, R97, R90 
+      FFMA R96, R19, R96, R31 
+      MOV R19, R13 
+      FFMA R74, R18, R97, R74 
+      FFMA R75, R18, R98, R75 
+      FFMA R76, R18, R99, R76 
+      FFMA R79, R18, R20, R79 
+      FFMA R78, R18, R21, R78 
+      FFMA R77, R18, R22, R77 
+      FFMA R80, R18, R23, R80 
+      IMAD.U32 R5, RZ, RZ, UR18 
+      IMAD.MOV.U32 R18, RZ, RZ, R8 
+      FFMA R38, R16, R97, R60 
+      IMAD.WIDE.U32 R18, R5, c[0x0][0x188], R18 
+      LOP3.LUT R5, R6, 0x4, RZ, 0xc0, !PT 
+      FFMA R55, R16, R98, R55 
+      SHF.R.U32.HI R5, RZ, 0x2, R5 
+      FFMA R56, R16, R99, R56 
+      IADD3 R19, R19, UR15, RZ 
+      FFMA R59, R16, R20, R59 
+      FFMA R58, R16, R21, R58 
+      FFMA R57, R16, R22, R57 
+      FFMA R69, R16, R23, R69 
+      IADD3 R16, P1, R14, R9, RZ 
+      IMAD.U32 R0, RZ, RZ, UR14 
+      IADD3 R14, P4, P6, R14, c[0x0][0x1c0], R15 
+      FFMA R70, R17, R23, R70 
+      LOP3.LUT R15, R4, 0x4, RZ, 0xc0, !PT 
+      FFMA R67, R17, R22, R67 
+      FFMA R68, R17, R21, R68 
+      FFMA R65, R17, R20, R65 
+      FFMA R66, R17, R99, R66 
+      FFMA R71, R17, R98, R71 
+      FFMA R64, R17, R97, R64 
+      IMAD.X R17, R7, 0x1, R10, P1 
+      ISETP.NE.U32.AND P1, PT, R5, RZ, PT 
+      HFMA2.MMA R5, -RZ, RZ, 0, 0 
+      IADD3.X R7, R7, c[0x0][0x1c4], R0, P4, P6 
+      FFMA R92, R24, R21, R92 
+      LOP3.LUT P6, RZ, R4, 0x1, RZ, 0xc0, !PT 
+      FFMA R104, R25, R21, R104 
+      LOP3.LUT R0, R4, 0x2, RZ, 0xc0, !PT 
+      FFMA R109, R26, R21, R109 
+      FFMA R112, R27, R21, R62 
+      SHF.R.U32.HI R0, RZ, 0x1, R0 
+      IMAD.MOV.U32 R21, RZ, RZ, RZ 
+@P5   LDG.E.LTC128B R5, [R18.64] 
+      FFMA R95, R24, R22, R95 
+      ISETP.NE.U32.AND P5, PT, R0, RZ, PT 
+      FFMA R36, R25, R22, R29 
+      FFMA R107, R26, R22, R107 
+      FFMA R53, R27, R22, R106 
+      IADD3 R22, P4, R18, c[0x0][0x188], RZ 
+@P6   LDG.E.LTC128B R21, [R16.64] 
+      SHF.R.U32.HI R15, RZ, 0x2, R15 
+      FFMA R101, R24, R23, R44 
+      IADD3 R34, P6, R16, c[0x0][0x1b8], RZ 
+      FFMA R100, R25, R23, R100 
+      LOP3.LUT R0, R4, 0x8, RZ, 0xc0, !PT 
+      FFMA R46, R26, R23, R46 
+      IADD3.X R23, R19, c[0x0][0x18c], RZ, P4, !PT 
+      FFMA R114, R27, R99, R50 
+      ISETP.NE.U32.AND P4, PT, R15, RZ, PT 
+      CS2R R18, SRZ 
+      IADD3.X R35, R17, c[0x0][0x1bc], RZ, P6, !PT 
+      FFMA R40, R26, R99, R110 
+      SHF.R.U32.HI R0, RZ, 0x3, R0 
+      ULDC.64 UR6, c[0x0][0x190] 
+      IADD3 R32, P6, R34, c[0x0][0x1b8], RZ 
+@P5   LDG.E.LTC128B R19, [R34.64] 
+      ISETP.NE.U32.AND P5, PT, R0, RZ, PT 
+      IMAD.MOV.U32 R17, RZ, RZ, RZ 
+      IADD3.X R33, R35, c[0x0][0x1bc], RZ, P6, !PT 
+      UIMAD.WIDE.U32 UR6, UR18, UR16, UR6 
+      LOP3.LUT R0, R6, 0x8, RZ, 0xc0, !PT 
+@P3   LDG.E.LTC128B R18, [R22.64] 
+      IADD3 R50, P3, R32, c[0x0][0x1b8], RZ 
+      IMAD.MOV.U32 R15, RZ, RZ, RZ 
+      SHF.R.U32.HI R0, RZ, 0x3, R0 
+@P4   LDG.E.LTC128B R17, [R32.64] 
+      IADD3 R8, P4, R8, UR6, RZ 
+      FFMA R89, R24, R97, R89 
+      MOV R16, UR7 
+      FFMA R91, R24, R98, R91 
+      IADD3.X R51, R33, c[0x0][0x1bc], RZ, P3, !PT 
+      FFMA R94, R24, R99, R94 
+      IADD3 R42, P6, R22, c[0x0][0x188], RZ 
+      FFMA R93, R24, R20, R93 
+      ISETP.NE.U32.AND P3, PT, R0, RZ, PT 
+@P5   LDG.E.LTC128B R15, [R50.64] 
+      IADD3.X R13, R13, UR15, R16, P4, !PT 
+      HFMA2.MMA R16, -RZ, RZ, 0, 0 
+      IADD3.X R43, R23, c[0x0][0x18c], RZ, P6, !PT 
+      FFMA R108, R25, R20, R108 
+      IADD3 R22, P4, R42, c[0x0][0x188], RZ 
+      IMAD.MOV.U32 R0, RZ, RZ, RZ 
+      LDS.128 R32, [R2+0x80] 
+      FFMA R102, R25, R99, R102 
+      IADD3.X R23, R43, c[0x0][0x18c], RZ, P4, !PT 
+      FFMA R37, R25, R98, R30 
+@P1   LDG.E.LTC128B R0, [R42.64] 
+      FFMA R48, R25, R97, R48 
+      FFMA R105, R26, R98, R105 
+@P3   LDG.E.LTC128B R16, [R22.64] 
+      FFMA R111, R26, R20, R111 
+      FFMA R110, R27, R20, R63 
+      LDS.128 R28, [R3] 
+      FFMA R113, R27, R98, R113 
+      FFMA R86, R27, R97, R86 
+      LDS.128 R60, [R2] 
+      LDS.128 R24, [R3+0x40] 
+      FFMA R97, R30, R61, R37 
+      FFMA R98, R29, R61, R48 
+      FFMA R99, R26, R61, R36 
+      LDS.128 R48, [R2+0x200] 
+      FFMA R37, R28, R61, R45 
+      FFMA R36, R29, R62, R41 
+      FFMA R106, R31, R62, R40 
+      FFMA R23, R27, R62, R46 
+      LDS.128 R40, [R3+0x210] 
+      LDS.128 R44, [R3+0x250] 
+      FFMA R103, R28, R62, R103 
+      FFMA R105, R30, R62, R105 
+      FFMA R111, R24, R62, R111 
+      FFMA R109, R25, R62, R109 
+      FFMA R107, R26, R62, R107 
+      FFMA R20, R31, R63, R114 
+      FFMA R22, R30, R63, R113 
+      FFMA R86, R29, R63, R86 
+      FFMA R52, R28, R63, R52 
+      FFMA R54, R27, R63, R54 
+      FFMA R53, R26, R63, R53 
+      FFMA R62, R25, R63, R112 
+      FFMA R93, R24, R60, R93 
+      FFMA R92, R25, R60, R92 
+      FFMA R95, R26, R60, R95 
+      FFMA R101, R27, R60, R101 
+      FFMA R100, R27, R61, R100 
+      FFMA R104, R25, R61, R104 
+      FFMA R108, R24, R61, R108 
+      FFMA R63, R24, R63, R110 
+      FFMA R59, R24, R32, R59 
+      FFMA R58, R25, R32, R58 
+      FFMA R57, R26, R32, R57 
+      FFMA R69, R27, R32, R69 
+      FFMA R70, R27, R33, R70 
+      FFMA R67, R26, R33, R67 
+      FFMA R68, R25, R33, R68 
+      FFMA R65, R24, R33, R65 
+      FFMA R79, R24, R34, R79 
+      FFMA R78, R25, R34, R78 
+      FFMA R77, R26, R34, R77 
+      FFMA R80, R27, R34, R80 
+      FFMA R84, R27, R35, R84 
+      FFMA R81, R26, R35, R81 
+      FFMA R88, R25, R35, R88 
+      FFMA R85, R24, R35, R85 
+      LDS.128 R24, [R2+0x280] 
+      FFMA R87, R28, R60, R87 
+      FFMA R89, R29, R60, R89 
+      FFMA R91, R30, R60, R91 
+      FFMA R94, R31, R60, R94 
+      FFMA R102, R31, R61, R102 
+      FFMA R87, R40, R48, R87 
+      FFMA R89, R41, R48, R89 
+      FFMA R91, R42, R48, R91 
+      FFMA R94, R43, R48, R94 
+      FFMA R93, R44, R48, R93 
+      FFMA R92, R45, R48, R92 
+      FFMA R95, R46, R48, R95 
+      FFMA R101, R47, R48, R101 
+      FFMA R102, R43, R49, R102 
+      FFMA R97, R42, R49, R97 
+      FFMA R98, R41, R49, R98 
+      FFMA R48, R40, R49, R37 
+      FFMA R100, R47, R49, R100 
+      FFMA R99, R46, R49, R99 
+      FFMA R104, R45, R49, R104 
+      FFMA R108, R44, R49, R108 
+      FFMA R61, R28, R32, R39 
+      FFMA R60, R29, R32, R38 
+      FFMA R55, R30, R32, R55 
+      FFMA R56, R31, R32, R56 
+      FFMA R66, R31, R33, R66 
+      FFMA R71, R30, R33, R71 
+      FFMA R64, R29, R33, R64 
+      FFMA R72, R28, R33, R72 
+      FFMA R73, R28, R34, R73 
+      FFMA R74, R29, R34, R74 
+      FFMA R75, R30, R34, R75 
+      FFMA R76, R31, R34, R76 
+      FFMA R82, R31, R35, R82 
+      FFMA R83, R30, R35, R83 
+      FFMA R90, R29, R35, R90 
+      FFMA R96, R28, R35, R96 
+      FFMA R49, R41, R50, R36 
+      LDS.128 R28, [R3+0x420] 
+      LDS.128 R36, [R2+0x400] 
+      LDS.128 R32, [R3+0x460] 
+      FFMA R103, R40, R50, R103 
+      FFMA R105, R42, R50, R105 
+      FFMA R106, R43, R50, R106 
+      FFMA R111, R44, R50, R111 
+      FFMA R109, R45, R50, R109 
+      FFMA R107, R46, R50, R107 
+      FFMA R50, R47, R50, R23 
+      FFMA R54, R47, R51, R54 
+      FFMA R53, R46, R51, R53 
+      FFMA R62, R45, R51, R62 
+      FFMA R63, R44, R51, R63 
+      FFMA R59, R44, R24, R59 
+      FFMA R58, R45, R24, R58 
+      FFMA R57, R46, R24, R57 
+      FFMA R69, R47, R24, R69 
+      FFMA R70, R47, R25, R70 
+      FFMA R67, R46, R25, R67 
+      FFMA R68, R45, R25, R68 
+      FFMA R65, R44, R25, R65 
+      FFMA R79, R44, R26, R79 
+      FFMA R78, R45, R26, R78 
+      FFMA R77, R46, R26, R77 
+      FFMA R80, R47, R26, R80 
+      FFMA R84, R47, R27, R84 
+      FFMA R81, R46, R27, R81 
+      FFMA R88, R45, R27, R88 
+      FFMA R85, R44, R27, R85 
+      LDS.128 R44, [R2+0x480] 
+      FFMA R87, R28, R36, R87 
+      FFMA R89, R29, R36, R89 
+      FFMA R91, R30, R36, R91 
+      FFMA R94, R31, R36, R94 
+      FFMA R93, R32, R36, R93 
+      FFMA R92, R33, R36, R92 
+      FFMA R95, R34, R36, R95 
+      FFMA R101, R35, R36, R101 
+      FFMA R102, R31, R37, R102 
+      FFMA R97, R30, R37, R97 
+      FFMA R98, R29, R37, R98 
+      FFMA R36, R28, R37, R48 
+      FFMA R100, R35, R37, R100 
+      FFMA R99, R34, R37, R99 
+      FFMA R104, R33, R37, R104 
+      FFMA R108, R32, R37, R108 
+      FFMA R20, R43, R51, R20 
+      FFMA R22, R42, R51, R22 
+      FFMA R23, R41, R51, R86 
+      FFMA R52, R40, R51, R52 
+      FFMA R61, R40, R24, R61 
+      FFMA R60, R41, R24, R60 
+      FFMA R55, R42, R24, R55 
+      FFMA R56, R43, R24, R56 
+      FFMA R66, R43, R25, R66 
+      FFMA R71, R42, R25, R71 
+      FFMA R64, R41, R25, R64 
+      FFMA R72, R40, R25, R72 
+      FFMA R73, R40, R26, R73 
+      FFMA R74, R41, R26, R74 
+      FFMA R75, R42, R26, R75 
+      FFMA R76, R43, R26, R76 
+      FFMA R82, R43, R27, R82 
+      FFMA R83, R42, R27, R83 
+      FFMA R90, R41, R27, R90 
+      FFMA R96, R40, R27, R96 
+      FFMA R37, R29, R38, R49 
+      LDS.128 R24, [R3+0x630] 
+      FFMA R112, R35, R38, R50 
+      LDS.128 R40, [R2+0x600] 
+      FFMA R110, R31, R38, R106 
+      LDS.128 R48, [R3+0x670] 
+      FFMA R111, R32, R38, R111 
+      FFMA R109, R33, R38, R109 
+      FFMA R107, R34, R38, R107 
+      FFMA R86, R35, R39, R54 
+      FFMA R106, R34, R39, R53 
+      FFMA R62, R33, R39, R62 
+      FFMA R63, R32, R39, R63 
+      FFMA R59, R32, R44, R59 
+      FFMA R58, R33, R44, R58 
+      FFMA R57, R34, R44, R57 
+      FFMA R69, R35, R44, R69 
+      FFMA R70, R35, R45, R70 
+      FFMA R67, R34, R45, R67 
+      FFMA R68, R33, R45, R68 
+      FFMA R65, R32, R45, R65 
+      FFMA R79, R32, R46, R79 
+      FFMA R78, R33, R46, R78 
+      FFMA R77, R34, R46, R77 
+      FFMA R80, R35, R46, R80 
+      FFMA R84, R35, R47, R84 
+      FFMA R81, R34, R47, R81 
+      FFMA R88, R33, R47, R88 
+      FFMA R85, R32, R47, R85 
+      LDS.128 R32, [R2+0x680] 
+      FFMA R103, R28, R38, R103 
+      FFMA R105, R30, R38, R105 
+      FFMA R38, R29, R39, R23 
+      FFMA R20, R31, R39, R20 
+      FFMA R22, R30, R39, R22 
+      FFMA R23, R28, R39, R52 
+      FFMA R39, R30, R44, R55 
+      FFMA R87, R24, R40, R87 
+      LDS.128 R52, [R3+0x880] 
+      FFMA R89, R25, R40, R89 
+      FFMA R91, R26, R40, R91 
+      FFMA R94, R27, R40, R94 
+      FFMA R93, R48, R40, R93 
+      FFMA R92, R49, R40, R92 
+      FFMA R95, R50, R40, R95 
+      FFMA R101, R51, R40, R101 
+      FFMA R102, R27, R41, R102 
+      FFMA R97, R26, R41, R97 
+      FFMA R98, R25, R41, R98 
+      FFMA R40, R24, R41, R36 
+      FFMA R100, R51, R41, R100 
+      FFMA R99, R50, R41, R99 
+      FFMA R104, R49, R41, R104 
+      FFMA R108, R48, R41, R108 
+      FFMA R61, R28, R44, R61 
+      FFMA R60, R29, R44, R60 
+      FFMA R56, R31, R44, R56 
+      FFMA R66, R31, R45, R66 
+      FFMA R71, R30, R45, R71 
+      FFMA R64, R29, R45, R64 
+      FFMA R72, R28, R45, R72 
+      FFMA R73, R28, R46, R73 
+      FFMA R74, R29, R46, R74 
+      FFMA R75, R30, R46, R75 
+      FFMA R76, R31, R46, R76 
+      FFMA R82, R31, R47, R82 
+      FFMA R83, R30, R47, R83 
+      FFMA R90, R29, R47, R90 
+      FFMA R96, R28, R47, R96 
+      FFMA R103, R24, R42, R103 
+      LDS.128 R28, [R3+0x840] 
+      FFMA R41, R25, R42, R37 
+      FFMA R105, R26, R42, R105 
+      LDS.128 R44, [R2+0x800] 
+      FFMA R110, R27, R42, R110 
+      FFMA R111, R48, R42, R111 
+      FFMA R109, R49, R42, R109 
+      FFMA R107, R50, R42, R107 
+      FFMA R112, R51, R42, R112 
+      FFMA R20, R27, R43, R20 
+      FFMA R22, R26, R43, R22 
+      FFMA R42, R25, R43, R38 
+      FFMA R23, R24, R43, R23 
+      FFMA R86, R51, R43, R86 
+      FFMA R106, R50, R43, R106 
+      FFMA R62, R49, R43, R62 
+      FFMA R63, R48, R43, R63 
+      FFMA R43, R26, R32, R39 
+      LDS.128 R36, [R2+0x880] 
+      FFMA R61, R24, R32, R61 
+      FFMA R60, R25, R32, R60 
+      FFMA R56, R27, R32, R56 
+      FFMA R59, R48, R32, R59 
+      FFMA R58, R49, R32, R58 
+      FFMA R57, R50, R32, R57 
+      FFMA R69, R51, R32, R69 
+      FFMA R70, R51, R33, R70 
+      FFMA R67, R50, R33, R67 
+      FFMA R68, R49, R33, R68 
+      FFMA R65, R48, R33, R65 
+      FFMA R66, R27, R33, R66 
+      FFMA R71, R26, R33, R71 
+      FFMA R64, R25, R33, R64 
+      FFMA R72, R24, R33, R72 
+      FFMA R73, R24, R34, R73 
+      FFMA R74, R25, R34, R74 
+      FFMA R75, R26, R34, R75 
+      FFMA R76, R27, R34, R76 
+      FFMA R79, R48, R34, R79 
+      FFMA R78, R49, R34, R78 
+      FFMA R77, R50, R34, R77 
+      FFMA R80, R51, R34, R80 
+      FFMA R84, R51, R35, R84 
+      FFMA R81, R50, R35, R81 
+      FFMA R88, R49, R35, R88 
+      FFMA R85, R48, R35, R85 
+      FFMA R82, R27, R35, R82 
+      LDS.128 R48, [R3+0xa90] 
+      FFMA R83, R26, R35, R83 
+      FFMA R90, R25, R35, R90 
+      FFMA R96, R24, R35, R96 
+      LDS.128 R24, [R3+0xa50] 
+      LDS.128 R32, [R2+0xa00] 
+      FFMA R87, R28, R44, R87 
+      FFMA R89, R29, R44, R89 
+      FFMA R91, R30, R44, R91 
+      FFMA R94, R31, R44, R94 
+      FFMA R93, R52, R44, R93 
+      FFMA R92, R53, R44, R92 
+      FFMA R95, R54, R44, R95 
+      FFMA R101, R55, R44, R101 
+      FFMA R102, R31, R45, R102 
+      FFMA R97, R30, R45, R97 
+      FFMA R98, R29, R45, R98 
+      FFMA R40, R28, R45, R40 
+      FFMA R100, R55, R45, R100 
+      FFMA R99, R54, R45, R99 
+      FFMA R104, R53, R45, R104 
+      FFMA R108, R52, R45, R108 
+      FFMA R103, R28, R46, R103 
+      FFMA R41, R29, R46, R41 
+      FFMA R105, R30, R46, R105 
+      FFMA R110, R31, R46, R110 
+      FFMA R111, R52, R46, R111 
+      FFMA R109, R53, R46, R109 
+      FFMA R107, R54, R46, R107 
+      FFMA R112, R55, R46, R112 
+      FFMA R20, R31, R47, R20 
+      FFMA R22, R30, R47, R22 
+      FFMA R42, R29, R47, R42 
+      FFMA R23, R28, R47, R23 
+      FFMA R86, R55, R47, R86 
+      FFMA R106, R54, R47, R106 
+      FFMA R62, R53, R47, R62 
+      FFMA R63, R52, R47, R63 
+      FFMA R61, R28, R36, R61 
+      LDS.128 R44, [R2+0xc00] 
+      FFMA R60, R29, R36, R60 
+      FFMA R43, R30, R36, R43 
+      FFMA R56, R31, R36, R56 
+      FFMA R66, R31, R37, R66 
+      FFMA R71, R30, R37, R71 
+      FFMA R64, R29, R37, R64 
+      FFMA R72, R28, R37, R72 
+      FFMA R73, R28, R38, R73 
+      FFMA R74, R29, R38, R74 
+      FFMA R75, R30, R38, R75 
+      FFMA R76, R31, R38, R76 
+      FFMA R82, R31, R39, R82 
+      FFMA R83, R30, R39, R83 
+      FFMA R90, R29, R39, R90 
+      FFMA R96, R28, R39, R96 
+      FFMA R59, R52, R36, R59 
+      LDS.128 R28, [R2+0xa80] 
+      FFMA R57, R54, R36, R57 
+      FFMA R67, R54, R37, R67 
+      FFMA R65, R52, R37, R65 
+      FFMA R79, R52, R38, R79 
+      FFMA R77, R54, R38, R77 
+      FFMA R81, R54, R39, R81 
+      FFMA R85, R52, R39, R85 
+      FFMA R58, R53, R36, R58 
+      FFMA R69, R55, R36, R69 
+      FFMA R70, R55, R37, R70 
+      FFMA R68, R53, R37, R68 
+      FFMA R78, R53, R38, R78 
+      FFMA R80, R55, R38, R80 
+      FFMA R84, R55, R39, R84 
+      FFMA R88, R53, R39, R88 
+      FFMA R87, R24, R32, R87 
+      LDS.128 R36, [R3+0xc60] 
+      FFMA R89, R25, R32, R89 
+      FFMA R91, R26, R32, R91 
+      FFMA R94, R27, R32, R94 
+      FFMA R93, R48, R32, R93 
+      FFMA R92, R49, R32, R92 
+      FFMA R95, R50, R32, R95 
+      FFMA R101, R51, R32, R101 
+      FFMA R102, R27, R33, R102 
+      FFMA R97, R26, R33, R97 
+      FFMA R98, R25, R33, R98 
+      FFMA R52, R24, R33, R40 
+      FFMA R100, R51, R33, R100 
+      FFMA R99, R50, R33, R99 
+      FFMA R104, R49, R33, R104 
+      FFMA R108, R48, R33, R108 
+      FFMA R103, R24, R34, R103 
+      FFMA R54, R25, R34, R41 
+      FFMA R105, R26, R34, R105 
+      FFMA R110, R27, R34, R110 
+      FFMA R111, R48, R34, R111 
+      FFMA R109, R49, R34, R109 
+      FFMA R107, R50, R34, R107 
+      FFMA R112, R51, R34, R112 
+      FFMA R20, R27, R35, R20 
+      FFMA R22, R26, R35, R22 
+      FFMA R114, R25, R35, R42 
+      FFMA R23, R24, R35, R23 
+      FFMA R86, R51, R35, R86 
+      FFMA R106, R50, R35, R106 
+      FFMA R62, R49, R35, R62 
+      FFMA R63, R48, R35, R63 
+      LDS.128 R32, [R3+0xca0] 
+      UISETP.NE.AND UP1, UPT, UR19, 0x1, UPT 
+      PLOP3.LUT P1, PT, PT, PT, UP1, 0x80, 0x0 
+      FFMA R61, R24, R28, R61 
+      FFMA R60, R25, R28, R60 
+      FFMA R55, R26, R28, R43 
+      FFMA R56, R27, R28, R56 
+      LDS.128 R40, [R2+0xc80] 
+      FFMA R59, R48, R28, R59 
+      FFMA R58, R49, R28, R58 
+      FFMA R57, R50, R28, R57 
+@P1   IADD3 R53, R3, -0x1290, RZ 
+      FFMA R69, R51, R28, R69 
+@P1   IADD3 R28, R2, -0x1200, RZ 
+      FFMA R70, R51, R29, R70 
+@!P1  IADD3 R53, R3, 0xe70, RZ 
+      FFMA R67, R50, R29, R67 
+@!P1  IADD3 R28, R2, 0xe00, RZ 
+      FFMA R68, R49, R29, R68 
+      FFMA R65, R48, R29, R65 
+      FFMA R66, R27, R29, R66 
+      FFMA R71, R26, R29, R71 
+      FFMA R64, R25, R29, R64 
+      FFMA R72, R24, R29, R72 
+      FFMA R73, R24, R30, R73 
+      FFMA R74, R25, R30, R74 
+      FFMA R75, R26, R30, R75 
+      FFMA R76, R27, R30, R76 
+      FFMA R79, R48, R30, R79 
+      FFMA R78, R49, R30, R78 
+      FFMA R77, R50, R30, R77 
+      FFMA R80, R51, R30, R80 
+      FFMA R85, R48, R31, R85 
+      FFMA R100, R35, R45, R100 
+      FFMA R29, R34, R45, R99 
+      FFMA R104, R33, R45, R104 
+      FFMA R108, R32, R45, R108 
+      FFMA R102, R39, R45, R102 
+      FFMA R30, R38, R45, R97 
+      FFMA R48, R37, R45, R98 
+      STS [R11], R5 
+      FFMA R45, R36, R45, R52 
+      FFMA R81, R50, R31, R81 
+      STS [R11+0x80], R18 
+      FFMA R52, R35, R47, R86 
+      FFMA R84, R51, R31, R84 
+      STS [R11+0x100], R0 
+      FFMA R88, R49, R31, R88 
+      FFMA R82, R27, R31, R82 
+      STS [R11+0x180], R16 
+      FFMA R83, R26, R31, R83 
+      FFMA R90, R25, R31, R90 
+      STS [R12], R21 
+      FFMA R106, R34, R47, R106 
+      FFMA R62, R33, R47, R62 
+      STS [R12+0x400], R19 
+      FFMA R63, R32, R47, R63 
+      FFMA R50, R39, R47, R20 
+      STS [R12+0x800], R17 
+      FFMA R113, R38, R47, R22 
+      FFMA R86, R37, R47, R114 
+      STS [R12+0xc00], R15 
+      FFMA R31, R24, R31, R96 
+      FFMA R47, R36, R47, R23 
+      BAR.SYNC 0x0 
+      LDS.128 R96, [R53] 
+      LDS.128 R20, [R53+0x40] 
+      LDS.128 R24, [R28] 
+      LDS.128 R16, [R28+0x80] 
+      UIADD3 UR11, UR11, -0x1, URZ 
+      UISETP.GT.AND UP2, UPT, UR11, 0x1, UPT 
+      PLOP3.LUT P3, PT, PT, PT, UP2, 0x80, 0x0 
+      UISETP.GT.AND UP0, UPT, UR11, 0x2, UPT 
+@UP1  UMOV UR6, 0x1080 
+@UP1  UMOV UR7, 0x1000 
+@!UP1 UMOV UR6, 0xffffef80 
+      PLOP3.LUT P1, PT, PT, PT, UP0, 0x80, 0x0 
+@!UP1 UMOV UR7, 0xfffff000 
+      IADD3 R11, R11, UR6, RZ 
+      ULOP3.LUT UR19, UR19, 0x1, URZ, 0x3c, !UPT 
+      IADD3 R12, R12, UR7, RZ 
+      FFMA R87, R36, R44, R87 
+      SEL R4, R4, RZ, P1 
+      FFMA R89, R37, R44, R89 
+      SEL R6, R6, RZ, P1 
+      FFMA R91, R38, R44, R91 
+      IADD3 R3, R53, 0x210, RZ 
+      FFMA R94, R39, R44, R94 
+      IADD3 R2, R28, 0x200, RZ 
+      FFMA R93, R32, R44, R93 
+      FFMA R92, R33, R44, R92 
+      FFMA R95, R34, R44, R95 
+      FFMA R103, R36, R46, R103 
+      FFMA R54, R37, R46, R54 
+      FFMA R105, R38, R46, R105 
+      FFMA R110, R39, R46, R110 
+      FFMA R111, R32, R46, R111 
+      FFMA R109, R33, R46, R109 
+      FFMA R107, R34, R46, R107 
+      FFMA R44, R35, R44, R101 
+      FFMA R46, R35, R46, R112 
+      FFMA R61, R36, R40, R61 
+      FFMA R60, R37, R40, R60 
+      FFMA R55, R38, R40, R55 
+      FFMA R56, R39, R40, R56 
+      FFMA R59, R32, R40, R59 
+      FFMA R58, R33, R40, R58 
+      FFMA R57, R34, R40, R57 
+      FFMA R69, R35, R40, R69 
+      FFMA R70, R35, R41, R70 
+      FFMA R67, R34, R41, R67 
+      FFMA R68, R33, R41, R68 
+      FFMA R65, R32, R41, R65 
+      FFMA R66, R39, R41, R66 
+      FFMA R71, R38, R41, R71 
+      FFMA R64, R37, R41, R64 
+      FFMA R72, R36, R41, R72 
+      FFMA R73, R36, R42, R73 
+      FFMA R74, R37, R42, R74 
+      FFMA R75, R38, R42, R75 
+      FFMA R76, R39, R42, R76 
+      FFMA R79, R32, R42, R79 
+      FFMA R78, R33, R42, R78 
+      FFMA R77, R34, R42, R77 
+      FFMA R80, R35, R42, R80 
+      FFMA R84, R35, R43, R84 
+      FFMA R81, R34, R43, R81 
+      FFMA R88, R33, R43, R88 
+      FFMA R85, R32, R43, R85 
+      FFMA R82, R39, R43, R82 
+      FFMA R83, R38, R43, R83 
+      FFMA R90, R37, R43, R90 
+      FFMA R31, R36, R43, R31 
+@!P3  CALL.REL.NOINC 0x14e695287000 
+      BRA 0x14e6952847d0 
+@P2   MOV R2, c[0x0][0x290] 
+@P2   IMAD.MOV.U32 R3, RZ, RZ, c[0x0][0x294] 
+@P0   IMAD.MOV.U32 R40, RZ, RZ, c[0x0][0x288] 
+@P0   IMAD.MOV.U32 R41, RZ, RZ, c[0x0][0x28c] 
+@P2   LDG.E R39, [R2.64] 
+@P0   LDG.E R40, [R40.64] 
+      S2R R7, SR_TID.X 
+      S2UR UR4, SR_CTAID.Y 
+      S2R R8, SR_CTAID.X 
+      SHF.R.S32.HI R10, RZ, 0x1f, R7 
+      LEA.HI R0, R10, R7, RZ, 0x5 
+      SHF.R.S32.HI R5, RZ, 0x5, R0 
+      LEA.HI R4, R0, R5, RZ, 0x1 
+      LOP3.LUT R2, R7, 0x1f, RZ, 0xc0, !PT 
+      LOP3.LUT R6, R4, 0xfffffffe, RZ, 0xc0, !PT 
+      LEA.HI R4, R10, R7, RZ, 0x6 
+      ULDC UR6, c[0x0][0x178] 
+      SHF.R.U32.HI R2, RZ, 0x4, R2 
+      IMAD.IADD R5, R5, 0x1, -R6 
+      UMOV UR5, 0xffffffff 
+      SHF.R.S32.HI R4, RZ, 0x6, R4 
+      USHF.L.U32 UR5, UR5, UR6, URZ 
+      IMAD.SHL.U32 R2, R2, 0x2, RZ 
+      USHF.L.U32 UR4, UR4, UR6, URZ 
+      LEA R3, R4, R5, 0x3 
+      IMAD R5, R4, 0x4, R5 
+      LOP3.LUT R0, R0, 0xffffffe0, RZ, 0xc0, !PT 
+      SHF.R.S32.HI R4, RZ, c[0x0][0x178], R8 
+      LOP3.LUT R8, R8, UR5, RZ, 0x30, !PT 
+      ULEA UR8, UR8, UR9, 0x2 
+      LOP3.LUT R37, R2, 0xfffffffe, R7, 0xe2, !PT 
+      IMAD.SHL.U32 R2, R7, 0x2, RZ 
+      IADD3 R0, -R0, R7, RZ 
+      IADD3 R7, R8, UR4, RZ 
+      USHF.L.U32 UR8, UR8, 0x2, URZ 
+      IMAD R3, R4, 0x20, R3 
+      LOP3.LUT R2, R2, 0x1c, RZ, 0xc0, !PT 
+      MOV R9, UR10 
+      IMAD R6, R7, 0x80, R0 
+      LOP3.LUT R37, R37, UR8, RZ, 0xfc, !PT 
+      IMAD.SHL.U32 R38, R3, 0x4, RZ 
+      LEA R4, R9, R2, 0x6 
+      IMAD.WIDE R2, R6, 0x4, RZ 
+      IMAD R5, R5, 0x244, RZ 
+      IMAD R37, R37, 0x91, R4 
+      IMAD.U32 R36, R0, 0x4, R5 
+      IMAD.WIDE.U32 R4, R38, c[0x0][0x1e0], R2 
+      ISETP.NE.U32.AND P4, PT, RZ, c[0x0][0x220], PT 
+      IMAD.WIDE.U32 R2, R38, c[0x0][0x230], R2 
+      ISETP.NE.AND.EX P4, PT, RZ, c[0x0][0x224], PT, P4 
+      IADD3 R20, P5, R2, c[0x0][0x270], RZ 
+      IADD3 R2, R6, 0x60, RZ 
+      IADD3 R0, R6, 0x40, RZ 
+      ISETP.LT.AND P6, PT, R2, c[0x0][0x164], P4 
+      SHF.R.S32.HI R7, RZ, 0x1f, R38 
+      P2R R35, PR, RZ, 0x40 
+      ISETP.LT.AND P6, PT, R0, c[0x0][0x164], P4 
+      IMAD R9, R7, c[0x0][0x1e0], RZ 
+      IMAD R7, R7, c[0x0][0x230], RZ 
+      P2R R34, PR, RZ, 0x40 
+      ISETP.NE.U32.AND P1, PT, RZ, c[0x0][0x270], PT 
+      IMAD R9, R38, c[0x0][0x1e4], R9 
+      IADD3 R22, P3, R4, c[0x0][0x220], RZ 
+      IMAD R7, R38, c[0x0][0x234], R7 
+      ISETP.NE.AND.EX P1, PT, RZ, c[0x0][0x274], PT, P1 
+      IADD3.X R23, R5, c[0x0][0x224], R9, P3, !PT 
+      IADD3.X R21, R3, c[0x0][0x274], R7, P5, !PT 
+      ISETP.LT.AND P5, PT, R6, c[0x0][0x164], P4 
+      ISETP.LT.AND P3, PT, R6, c[0x0][0x164], P1 
+      IADD3 R6, R6, 0x20, RZ 
+      ISETP.LT.AND P4, PT, R6, c[0x0][0x164], P4 
+@!P2  MOV R39, c[0x0][0x284] 
+      FSETP.NEU.AND P6, PT, R39, RZ, PT 
+@!P0  IMAD.MOV.U32 R40, RZ, RZ, c[0x0][0x280] 
+      ISETP.LT.AND P0, PT, R2, c[0x0][0x164], P1 
+      ISETP.LT.AND P2, PT, R0, c[0x0][0x164], P1 
+      ISETP.LT.AND P1, PT, R6, c[0x0][0x164], P1 
+@!P6  BRA 0x14e69528a870 
+      IADD3 R18, P6, R22, c[0x0][0x200], RZ 
+      IMAD.MOV.U32 R7, RZ, RZ, c[0x0][0x208] 
+      P2R R0, PR, RZ, 0x2 
+      IMAD.MOV.U32 R3, RZ, RZ, c[0x0][0x20c] 
+      IADD3.X R19, R23, c[0x0][0x204], RZ, P6, !PT 
+      IMAD.MOV.U32 R28, RZ, RZ, RZ 
+      IADD3 R14, P6, R18, c[0x0][0x200], RZ 
+      MOV R5, c[0x0][0x258] 
+      P2R R24, PR, RZ, 0x4 
+      IMAD.MOV.U32 R42, RZ, RZ, RZ 
+      IADD3.X R15, R19, c[0x0][0x204], RZ, P6, !PT 
+      P2R R25, PR, RZ, 0x1 
+      MOV R96, RZ 
+      IADD3 R32, R38, 0x8, RZ 
+      IMAD.MOV.U32 R112, RZ, RZ, RZ 
+      IADD3 R10, P6, R14, c[0x0][0x200], RZ 
+      HFMA2.MMA R98, -RZ, RZ, 0, 0 
+      ISETP.NE.AND P2, PT, R34, RZ, PT 
+      IMAD.MOV.U32 R114, RZ, RZ, RZ 
+      IADD3.X R11, R15, c[0x0][0x204], RZ, P6, !PT 
+      ULDC.64 UR6, c[0x0][0x200] 
+      IADD3 R6, P1, P6, R10, c[0x0][0x200], R7 
+      ULDC.64 UR4, c[0x0][0x250] 
+      ISETP.NE.AND P0, PT, R35, RZ, PT 
+      IADD3.X R7, R11, c[0x0][0x204], R3, P1, P6 
+      IMAD.MOV.U32 R3, RZ, RZ, c[0x0][0x25c] 
+      IADD3 R16, P6, R20, c[0x0][0x250], RZ 
+      IADD3.X R17, R21, c[0x0][0x254], RZ, P6, !PT 
+      IADD3 R12, P6, R16, c[0x0][0x250], RZ 
+      IADD3.X R13, R17, c[0x0][0x254], RZ, P6, !PT 
+      IADD3 R8, P6, R12, c[0x0][0x250], RZ 
+      IADD3.X R9, R13, c[0x0][0x254], RZ, P6, !PT 
+      IADD3 R4, P1, P6, R8, c[0x0][0x250], R5 
+      IADD3.X R5, R9, c[0x0][0x254], R3, P1, P6 
+      ISETP.LT.AND P6, PT, R38, c[0x0][0x160], P5 
+      ISETP.NE.AND P1, PT, R0, RZ, PT 
+@P6   LDG.E.LTC128B R28, [R22.64] 
+      ISETP.LT.AND P6, PT, R38, c[0x0][0x160], P4 
+      HFMA2.MMA R0, -RZ, RZ, 0, 0 
+@P6   LDG.E.LTC128B R0, [R22.64+0x80] 
+      ISETP.LT.AND P6, PT, R38, c[0x0][0x160], P2 
+@P6   LDG.E.LTC128B R42, [R22.64+0x100] 
+      ISETP.LT.AND P6, PT, R38, c[0x0][0x160], P0 
+@P6   LDG.E.LTC128B R96, [R22.64+0x180] 
+      IADD3 R2, P6, R22, c[0x0][0x1f0], RZ 
+      IADD3.X R3, R23, c[0x0][0x1f4], RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R32, c[0x0][0x160], P5 
+@P6   LDG.E.LTC128B R112, [R2.64] 
+      ISETP.LT.AND P6, PT, R32, c[0x0][0x160], P4 
+@P6   LDG.E.LTC128B R98, [R2.64+0x80] 
+      ISETP.LT.AND P6, PT, R32, c[0x0][0x160], P2 
+      MOV R116, RZ 
+      ISETP.NE.AND P2, PT, R24, RZ, PT 
+@P6   LDG.E.LTC128B R114, [R2.64+0x100] 
+      ISETP.LT.AND P6, PT, R32, c[0x0][0x160], P0 
+      ISETP.NE.AND P0, PT, R25, RZ, PT 
+@P6   LDG.E.LTC128B R116, [R2.64+0x180] 
+      BAR.SYNC 0x0 
+      STS [R37.X4], R87 
+      ISETP.LT.AND P6, PT, R38, c[0x0][0x160], P3 
+      STS [R37.X4+0x4], R45 
+      STS [R37.X4+0x8], R103 
+      STS [R37.X4+0xc], R47 
+      STS [R37.X4+0x80], R61 
+      STS [R37.X4+0x84], R72 
+      STS [R37.X4+0x88], R73 
+      STS [R37.X4+0x8c], R31 
+      BAR.SYNC 0x0 
+      LDS R25, [R36] 
+      FMUL R25, R25, R40 
+      FFMA R27, R28, R39, R25 
+      LDS R25, [R36+0x80] 
+@P6   STG.E [R20.64], R27 
+      ISETP.LT.AND P6, PT, R38, c[0x0][0x160], P1 
+      FMUL R25, R25, R40 
+      FFMA R33, R0, R39, R25 
+      LDS R25, [R36+0x100] 
+@P6   STG.E [R20.64+0x80], R33 
+      ISETP.LT.AND P6, PT, R38, c[0x0][0x160], P2 
+      FMUL R25, R25, R40 
+      FFMA R31, R42, R39, R25 
+      LDS R25, [R36+0x180] 
+@P6   STG.E [R20.64+0x100], R31 
+      ISETP.LT.AND P6, PT, R38, c[0x0][0x160], P0 
+      LDS R31, [R36+0x588] 
+      FMUL R25, R25, R40 
+      FFMA R41, R96, R39, R25 
+      LDS R25, [R36+0x488] 
+      FMUL R31, R31, R40 
+@P6   STG.E [R20.64+0x180], R41 
+      IADD3 R26, P6, R20, c[0x0][0x240], RZ 
+      FFMA R45, R114, R39, R31 
+      LDS R31, [R36+0x608] 
+      IADD3.X R27, R21, c[0x0][0x244], RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R32, c[0x0][0x160], P3 
+      IADD3 R41, R38, 0x1, RZ 
+      FMUL R25, R25, R40 
+      FFMA R33, R112, R39, R25 
+      LDS R25, [R36+0x508] 
+      FMUL R31, R31, R40 
+@P6   STG.E [R26.64], R33 
+      ISETP.LT.AND P6, PT, R32, c[0x0][0x160], P1 
+      FFMA R31, R116, R39, R31 
+@P6   IMAD.MOV.U32 R24, RZ, RZ, R26 
+      FMUL R25, R25, R40 
+      FFMA R43, R98, R39, R25 
+@P6   MOV R25, R27 
+@P6   STG.E [R24.64+0x80], R43 
+      ISETP.LT.AND P6, PT, R32, c[0x0][0x160], P2 
+@P6   IMAD.MOV.U32 R24, RZ, RZ, R26 
+@P6   MOV R25, R27 
+@P6   STG.E [R24.64+0x100], R45 
+      ISETP.LT.AND P6, PT, R32, c[0x0][0x160], P0 
+@P6   IMAD.MOV.U32 R24, RZ, RZ, R26 
+@P6   MOV R25, R27 
+@P6   STG.E [R24.64+0x180], R31 
+      ISETP.LT.AND P6, PT, R41, c[0x0][0x160], P5 
+      UIADD3 UR16, UP0, UR6, 0x80, URZ 
+      UIADD3.X UR17, URZ, UR7, URZ, UP0, !UPT 
+@P6   LDG.E.LTC128B R28, [R18.64] 
+      IADD3 R32, P6, R22, UR16, RZ 
+      IADD3.X R33, R23, UR17, RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R41, c[0x0][0x160], P4 
+      UIADD3 UR14, UP0, UR6, 0x100, URZ 
+      UIADD3.X UR15, URZ, UR7, URZ, UP0, !UPT 
+@P6   LDG.E.LTC128B R0, [R32.64] 
+      IADD3 R24, P6, R22, UR14, RZ 
+      IADD3.X R25, R23, UR15, RZ, P6, !PT 
+      ISETP.NE.AND P6, PT, R34, RZ, PT 
+      ISETP.LT.AND P6, PT, R41, c[0x0][0x160], P6 
+      UIADD3 UR6, UP0, UR6, 0x180, URZ 
+      UIADD3.X UR7, URZ, UR7, URZ, UP0, !UPT 
+@P6   LDG.E.LTC128B R42, [R24.64] 
+      IADD3 R72, P6, R22, UR6, RZ 
+      IADD3.X R73, R23, UR7, RZ, P6, !PT 
+      ISETP.NE.AND P6, PT, R35, RZ, PT 
+      ISETP.LT.AND P6, PT, R41, c[0x0][0x160], P6 
+      IADD3 R31, R38, 0x9, RZ 
+@P6   LDG.E.LTC128B R96, [R72.64] 
+      IADD3 R32, P6, R2, UR16, RZ 
+      IADD3.X R33, R3, UR17, RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R31, c[0x0][0x160], P4 
+@P6   LDG.E.LTC128B R98, [R32.64] 
+      IADD3 R24, P6, R2, UR14, RZ 
+      IADD3.X R25, R3, UR15, RZ, P6, !PT 
+      ISETP.NE.AND P6, PT, R34, RZ, PT 
+      ISETP.LT.AND P6, PT, R31, c[0x0][0x160], P6 
+@P6   LDG.E.LTC128B R114, [R24.64] 
+      IADD3 R22, P6, R2, UR6, RZ 
+      IADD3.X R23, R3, UR7, RZ, P6, !PT 
+      ISETP.NE.AND P6, PT, R35, RZ, PT 
+      ISETP.LT.AND P6, PT, R31, c[0x0][0x160], P6 
+@P6   LDG.E.LTC128B R116, [R22.64] 
+      IADD3 R2, P6, R2, c[0x0][0x200], RZ 
+      IADD3.X R3, R3, c[0x0][0x204], RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R31, c[0x0][0x160], P5 
+@P6   LDG.E.LTC128B R112, [R2.64] 
+      BAR.SYNC 0x0 
+      STS [R37.X4], R89 
+      ISETP.LT.AND P6, PT, R41, c[0x0][0x160], P3 
+      UIADD3 UR10, UP0, UR4, 0x80, URZ 
+      STS [R37.X4+0x4], R48 
+      UIADD3.X UR11, URZ, UR5, URZ, UP0, !UPT 
+      STS [R37.X4+0x8], R54 
+      UIADD3 UR8, UP0, UR4, 0x100, URZ 
+      STS [R37.X4+0xc], R86 
+      UIADD3.X UR9, URZ, UR5, URZ, UP0, !UPT 
+      UIADD3 UR4, UP0, UR4, 0x180, URZ 
+      STS [R37.X4+0x80], R60 
+      UIADD3.X UR5, URZ, UR5, URZ, UP0, !UPT 
+      STS [R37.X4+0x84], R64 
+      STS [R37.X4+0x88], R74 
+      STS [R37.X4+0x8c], R90 
+      BAR.SYNC 0x0 
+      LDS R23, [R36] 
+      LDS R25, [R36+0x80] 
+      FMUL R23, R23, R40 
+      FMUL R25, R25, R40 
+      FFMA R33, R28, R39, R23 
+@P6   STG.E [R16.64], R33 
+      IADD3 R22, P6, R20, UR10, RZ 
+      LDS R33, [R36+0x100] 
+      IADD3.X R23, R21, UR11, RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R41, c[0x0][0x160], P1 
+      FFMA R43, R0, R39, R25 
+@P6   STG.E [R22.64], R43 
+      IADD3 R24, P6, R20, UR8, RZ 
+      LDS R23, [R36+0x180] 
+      IADD3.X R25, R21, UR9, RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R41, c[0x0][0x160], P2 
+      FMUL R33, R33, R40 
+      FFMA R33, R42, R39, R33 
+@P6   STG.E [R24.64], R33 
+      IADD3 R20, P6, R20, UR4, RZ 
+      LDS R33, [R36+0x508] 
+      IADD3.X R21, R21, UR5, RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R41, c[0x0][0x160], P0 
+      LDS R25, [R36+0x488] 
+      FMUL R23, R23, R40 
+      FFMA R43, R96, R39, R23 
+@P6   STG.E [R20.64], R43 
+      IADD3 R22, P6, R26, c[0x0][0x250], RZ 
+      IADD3.X R23, R27, c[0x0][0x254], RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R31, c[0x0][0x160], P3 
+      FMUL R33, R33, R40 
+      FFMA R43, R98, R39, R33 
+      LDS R33, [R36+0x588] 
+      FMUL R25, R25, R40 
+      FMUL R33, R33, R40 
+      FFMA R41, R112, R39, R25 
+@P6   STG.E [R22.64], R41 
+      IADD3 R24, P6, R26, UR10, RZ 
+      IADD3.X R25, R27, UR11, RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R31, c[0x0][0x160], P1 
+      FFMA R41, R114, R39, R33 
+      LDS R33, [R36+0x608] 
+@P6   STG.E [R24.64], R43 
+      IADD3 R20, P6, R26, UR8, RZ 
+      IADD3.X R21, R27, UR9, RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R31, c[0x0][0x160], P2 
+@P6   STG.E [R20.64], R41 
+      IADD3 R26, P6, R26, UR4, RZ 
+      IADD3.X R27, R27, UR5, RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R31, c[0x0][0x160], P0 
+      IADD3 R31, R38, 0x2, RZ 
+      FMUL R33, R33, R40 
+      FFMA R33, R116, R39, R33 
+@P6   STG.E [R26.64], R33 
+      ISETP.LT.AND P6, PT, R31, c[0x0][0x160], P5 
+@P6   LDG.E.LTC128B R28, [R14.64] 
+      IADD3 R20, P6, R18, UR16, RZ 
+      IADD3.X R21, R19, UR17, RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R31, c[0x0][0x160], P4 
+@P6   LDG.E.LTC128B R0, [R20.64] 
+      IADD3 R24, P6, R18, UR14, RZ 
+      IADD3.X R25, R19, UR15, RZ, P6, !PT 
+      ISETP.NE.AND P6, PT, R34, RZ, PT 
+      ISETP.LT.AND P6, PT, R31, c[0x0][0x160], P6 
+@P6   LDG.E.LTC128B R42, [R24.64] 
+      IADD3 R18, P6, R18, UR6, RZ 
+      IADD3.X R19, R19, UR7, RZ, P6, !PT 
+      ISETP.NE.AND P6, PT, R35, RZ, PT 
+      ISETP.LT.AND P6, PT, R31, c[0x0][0x160], P6 
+      IADD3 R26, R38, 0xa, RZ 
+@P6   LDG.E.LTC128B R96, [R18.64] 
+      IADD3 R20, P6, R2, UR16, RZ 
+      IADD3.X R21, R3, UR17, RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R26, c[0x0][0x160], P4 
+@P6   LDG.E.LTC128B R98, [R20.64] 
+      IADD3 R24, P6, R2, UR14, RZ 
+      IADD3.X R25, R3, UR15, RZ, P6, !PT 
+      ISETP.NE.AND P6, PT, R34, RZ, PT 
+      ISETP.LT.AND P6, PT, R26, c[0x0][0x160], P6 
+@P6   LDG.E.LTC128B R114, [R24.64] 
+      IADD3 R18, P6, R2, UR6, RZ 
+      IADD3.X R19, R3, UR7, RZ, P6, !PT 
+      ISETP.NE.AND P6, PT, R35, RZ, PT 
+      ISETP.LT.AND P6, PT, R26, c[0x0][0x160], P6 
+@P6   LDG.E.LTC128B R116, [R18.64] 
+      IADD3 R2, P6, R2, c[0x0][0x200], RZ 
+      IADD3.X R3, R3, c[0x0][0x204], RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R26, c[0x0][0x160], P5 
+@P6   LDG.E.LTC128B R112, [R2.64] 
+      BAR.SYNC 0x0 
+      STS [R37.X4], R91 
+      ISETP.LT.AND P6, PT, R31, c[0x0][0x160], P3 
+      STS [R37.X4+0x4], R30 
+      STS [R37.X4+0x8], R105 
+      STS [R37.X4+0xc], R113 
+      STS [R37.X4+0x80], R55 
+      STS [R37.X4+0x84], R71 
+      STS [R37.X4+0x88], R75 
+      STS [R37.X4+0x8c], R83 
+      BAR.SYNC 0x0 
+      LDS R19, [R36] 
+      LDS R21, [R36+0x80] 
+      LDS R25, [R36+0x100] 
+      FMUL R19, R19, R40 
+      FMUL R21, R21, R40 
+      FMUL R25, R25, R40 
+      FFMA R27, R28, R39, R19 
+@P6   STG.E [R12.64], R27 
+      IADD3 R18, P6, R16, UR10, RZ 
+      IADD3.X R19, R17, UR11, RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R31, c[0x0][0x160], P1 
+      FFMA R33, R0, R39, R21 
+@P6   STG.E [R18.64], R33 
+      IADD3 R20, P6, R16, UR8, RZ 
+      LDS R19, [R36+0x488] 
+      IADD3.X R21, R17, UR9, RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R31, c[0x0][0x160], P2 
+      FFMA R27, R42, R39, R25 
+@P6   STG.E [R20.64], R27 
+      IADD3 R24, P6, R16, UR4, RZ 
+      LDS R21, [R36+0x508] 
+      IADD3.X R25, R17, UR5, RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R31, c[0x0][0x160], P0 
+      LDS R17, [R36+0x180] 
+      FMUL R19, R19, R40 
+      FMUL R21, R21, R40 
+      FMUL R17, R17, R40 
+      FFMA R31, R98, R39, R21 
+      FFMA R33, R96, R39, R17 
+@P6   STG.E [R24.64], R33 
+      IADD3 R16, P6, R22, c[0x0][0x250], RZ 
+      LDS R25, [R36+0x588] 
+      IADD3.X R17, R23, c[0x0][0x254], RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R26, c[0x0][0x160], P3 
+      IADD3 R24, R38, 0x3, RZ 
+      FMUL R25, R25, R40 
+      FFMA R27, R112, R39, R19 
+@P6   STG.E [R16.64], R27 
+      IADD3 R18, P6, R22, UR10, RZ 
+      IADD3.X R19, R23, UR11, RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R26, c[0x0][0x160], P1 
+      FFMA R27, R114, R39, R25 
+      LDS R25, [R36+0x608] 
+@P6   STG.E [R18.64], R31 
+      IADD3 R20, P6, R22, UR8, RZ 
+      IADD3.X R21, R23, UR9, RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R26, c[0x0][0x160], P2 
+@P6   STG.E [R20.64], R27 
+      IADD3 R22, P6, R22, UR4, RZ 
+      IADD3.X R23, R23, UR5, RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R26, c[0x0][0x160], P0 
+      FMUL R25, R25, R40 
+      FFMA R25, R116, R39, R25 
+@P6   STG.E [R22.64], R25 
+      ISETP.LT.AND P6, PT, R24, c[0x0][0x160], P5 
+@P6   LDG.E.LTC128B R28, [R10.64] 
+      IADD3 R18, P6, R14, UR16, RZ 
+      IADD3.X R19, R15, UR17, RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R24, c[0x0][0x160], P4 
+@P6   LDG.E.LTC128B R0, [R18.64] 
+      IADD3 R20, P6, R14, UR14, RZ 
+      IADD3.X R21, R15, UR15, RZ, P6, !PT 
+      ISETP.NE.AND P6, PT, R34, RZ, PT 
+      ISETP.LT.AND P6, PT, R24, c[0x0][0x160], P6 
+@P6   LDG.E.LTC128B R42, [R20.64] 
+      IADD3 R14, P6, R14, UR6, RZ 
+      IADD3.X R15, R15, UR7, RZ, P6, !PT 
+      ISETP.NE.AND P6, PT, R35, RZ, PT 
+      ISETP.LT.AND P6, PT, R24, c[0x0][0x160], P6 
+@P6   LDG.E.LTC128B R96, [R14.64] 
+      IADD3 R10, P6, R2, c[0x0][0x200], RZ 
+      IADD3 R22, R38, 0xb, RZ 
+      IADD3.X R11, R3, c[0x0][0x204], RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R22, c[0x0][0x160], P5 
+@P6   LDG.E.LTC128B R112, [R10.64] 
+      IADD3 R18, P6, R2, UR16, RZ 
+      IADD3.X R19, R3, UR17, RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R22, c[0x0][0x160], P4 
+@P6   LDG.E.LTC128B R98, [R18.64] 
+      IADD3 R20, P6, R2, UR14, RZ 
+      IADD3.X R21, R3, UR15, RZ, P6, !PT 
+      ISETP.NE.AND P6, PT, R34, RZ, PT 
+      ISETP.LT.AND P6, PT, R22, c[0x0][0x160], P6 
+@P6   LDG.E.LTC128B R114, [R20.64] 
+      IADD3 R2, P6, R2, UR6, RZ 
+      IADD3.X R3, R3, UR7, RZ, P6, !PT 
+      ISETP.NE.AND P6, PT, R35, RZ, PT 
+      ISETP.LT.AND P6, PT, R22, c[0x0][0x160], P6 
+@P6   LDG.E.LTC128B R116, [R2.64] 
+      BAR.SYNC 0x0 
+      STS [R37.X4], R94 
+      ISETP.LT.AND P6, PT, R24, c[0x0][0x160], P3 
+      STS [R37.X4+0x4], R102 
+      STS [R37.X4+0x8], R110 
+      STS [R37.X4+0xc], R50 
+      STS [R37.X4+0x80], R56 
+      STS [R37.X4+0x84], R66 
+      STS [R37.X4+0x88], R76 
+      STS [R37.X4+0x8c], R82 
+      BAR.SYNC 0x0 
+      LDS R3, [R36] 
+      LDS R11, [R36+0x80] 
+      LDS R15, [R36+0x100] 
+      FMUL R3, R3, R40 
+      FMUL R11, R11, R40 
+      FMUL R15, R15, R40 
+      FFMA R19, R28, R39, R3 
+@P6   STG.E [R8.64], R19 
+      IADD3 R2, P6, R12, UR10, RZ 
+      IADD3.X R3, R13, UR11, RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R24, c[0x0][0x160], P1 
+      FFMA R21, R0, R39, R11 
+@P6   STG.E [R2.64], R21 
+      IADD3 R10, P6, R12, UR8, RZ 
+      IADD3.X R11, R13, UR9, RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R24, c[0x0][0x160], P2 
+      FFMA R15, R42, R39, R15 
+@P6   STG.E [R10.64], R15 
+      IADD3 R8, P6, R12, UR4, RZ 
+      IADD3 R12, R38, 0x10, RZ 
+      IADD3.X R9, R13, UR5, RZ, P6, !PT 
+      LDS R13, [R36+0x180] 
+      ISETP.LT.AND P6, PT, R24, c[0x0][0x160], P0 
+      FMUL R13, R13, R40 
+      FFMA R19, R96, R39, R13 
+      LDS R13, [R36+0x488] 
+@P6   STG.E [R8.64], R19 
+      IADD3 R2, P6, R16, c[0x0][0x250], RZ 
+      IADD3.X R3, R17, c[0x0][0x254], RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R22, c[0x0][0x160], P3 
+      FMUL R13, R13, R40 
+      FFMA R15, R112, R39, R13 
+      LDS R13, [R36+0x508] 
+@P6   STG.E [R2.64], R15 
+      IADD3 R10, P6, R16, UR10, RZ 
+      IADD3.X R11, R17, UR11, RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R22, c[0x0][0x160], P1 
+      FMUL R13, R13, R40 
+      FFMA R19, R98, R39, R13 
+      LDS R13, [R36+0x588] 
+@P6   STG.E [R10.64], R19 
+      IADD3 R8, P6, R16, UR8, RZ 
+      IADD3.X R9, R17, UR9, RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R22, c[0x0][0x160], P2 
+      FMUL R13, R13, R40 
+      FFMA R15, R114, R39, R13 
+      LDS R13, [R36+0x608] 
+@P6   STG.E [R8.64], R15 
+      IADD3 R2, P6, R16, UR4, RZ 
+      IADD3.X R3, R17, UR5, RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R22, c[0x0][0x160], P0 
+      FMUL R13, R13, R40 
+      FFMA R13, R116, R39, R13 
+@P6   STG.E [R2.64], R13 
+      ISETP.LT.AND P6, PT, R12, c[0x0][0x160], P5 
+@P6   LDG.E.LTC128B R28, [R6.64] 
+      ISETP.LT.AND P6, PT, R12, c[0x0][0x160], P4 
+@P6   IMAD.MOV.U32 R2, RZ, RZ, R6 
+@P6   MOV R3, R7 
+@P6   LDG.E.LTC128B R0, [R2.64+0x80] 
+      ISETP.NE.AND P6, PT, R34, RZ, PT 
+      ISETP.LT.AND P6, PT, R12, c[0x0][0x160], P6 
+@P6   IMAD.MOV.U32 R2, RZ, RZ, R6 
+@P6   MOV R3, R7 
+@P6   LDG.E.LTC128B R42, [R2.64+0x100] 
+      ISETP.NE.AND P6, PT, R35, RZ, PT 
+      ISETP.LT.AND P6, PT, R12, c[0x0][0x160], P6 
+@P6   IMAD.MOV.U32 R2, RZ, RZ, R6 
+@P6   MOV R3, R7 
+@P6   LDG.E.LTC128B R96, [R2.64+0x180] 
+      IADD3 R10, P6, R6, c[0x0][0x1f0], RZ 
+      IADD3 R13, R38, 0x18, RZ 
+      IADD3.X R11, R7, c[0x0][0x1f4], RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R13, c[0x0][0x160], P5 
+@P6   LDG.E.LTC128B R112, [R10.64] 
+      ISETP.LT.AND P6, PT, R13, c[0x0][0x160], P4 
+@P6   IMAD.MOV.U32 R2, RZ, RZ, R10 
+@P6   MOV R3, R11 
+@P6   LDG.E.LTC128B R98, [R2.64+0x80] 
+      ISETP.NE.AND P6, PT, R34, RZ, PT 
+      ISETP.LT.AND P6, PT, R13, c[0x0][0x160], P6 
+@P6   LDG.E.LTC128B R114, [R10.64+0x100] 
+      ISETP.NE.AND P6, PT, R35, RZ, PT 
+      ISETP.LT.AND P6, PT, R13, c[0x0][0x160], P6 
+@P6   LDG.E.LTC128B R116, [R10.64+0x180] 
+      BAR.SYNC 0x0 
+      STS [R37.X4], R93 
+      IADD3 R8, P6, R4, c[0x0][0x240], RZ 
+      IADD3 R20, R38, 0x11, RZ 
+      STS [R37.X4+0x4], R108 
+      IADD3.X R9, R5, c[0x0][0x244], RZ, P6, !PT 
+      IADD3 R2, P6, R6, c[0x0][0x200], RZ 
+      STS [R37.X4+0x8], R111 
+      IADD3.X R3, R7, c[0x0][0x204], RZ, P6, !PT 
+      STS [R37.X4+0xc], R63 
+      ISETP.LT.AND P6, PT, R12, c[0x0][0x160], P3 
+      STS [R37.X4+0x80], R59 
+      STS [R37.X4+0x84], R65 
+      STS [R37.X4+0x88], R79 
+      STS [R37.X4+0x8c], R85 
+      BAR.SYNC 0x0 
+      LDS R15, [R36] 
+      FMUL R15, R15, R40 
+      FFMA R17, R28, R39, R15 
+      LDS R15, [R36+0x80] 
+@P6   STG.E [R4.64], R17 
+      ISETP.LT.AND P6, PT, R12, c[0x0][0x160], P1 
+      FMUL R15, R15, R40 
+      FFMA R19, R0, R39, R15 
+      LDS R15, [R36+0x100] 
+@P6   STG.E [R4.64+0x80], R19 
+      ISETP.LT.AND P6, PT, R12, c[0x0][0x160], P2 
+      FMUL R15, R15, R40 
+      FFMA R21, R42, R39, R15 
+      LDS R15, [R36+0x180] 
+@P6   STG.E [R4.64+0x100], R21 
+      ISETP.LT.AND P6, PT, R12, c[0x0][0x160], P0 
+      FMUL R15, R15, R40 
+      FFMA R17, R96, R39, R15 
+      LDS R15, [R36+0x488] 
+@P6   STG.E [R4.64+0x180], R17 
+      ISETP.LT.AND P6, PT, R13, c[0x0][0x160], P3 
+      FMUL R15, R15, R40 
+      FFMA R19, R112, R39, R15 
+      LDS R15, [R36+0x508] 
+@P6   STG.E [R8.64], R19 
+      ISETP.LT.AND P6, PT, R13, c[0x0][0x160], P1 
+      FMUL R15, R15, R40 
+      FFMA R21, R98, R39, R15 
+      LDS R15, [R36+0x588] 
+@P6   STG.E [R8.64+0x80], R21 
+      ISETP.LT.AND P6, PT, R13, c[0x0][0x160], P2 
+      FMUL R15, R15, R40 
+      FFMA R17, R114, R39, R15 
+      LDS R15, [R36+0x608] 
+@P6   STG.E [R8.64+0x100], R17 
+      ISETP.LT.AND P6, PT, R13, c[0x0][0x160], P0 
+      FMUL R15, R15, R40 
+      FFMA R19, R116, R39, R15 
+@P6   STG.E [R8.64+0x180], R19 
+      ISETP.LT.AND P6, PT, R20, c[0x0][0x160], P5 
+@P6   LDG.E.LTC128B R28, [R2.64] 
+      IADD3 R12, P6, R6, UR16, RZ 
+      IADD3.X R13, R7, UR17, RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R20, c[0x0][0x160], P4 
+@P6   LDG.E.LTC128B R0, [R12.64] 
+      IADD3 R14, P6, R6, UR14, RZ 
+      IADD3.X R15, R7, UR15, RZ, P6, !PT 
+      ISETP.NE.AND P6, PT, R34, RZ, PT 
+      ISETP.LT.AND P6, PT, R20, c[0x0][0x160], P6 
+@P6   LDG.E.LTC128B R42, [R14.64] 
+      IADD3 R6, P6, R6, UR6, RZ 
+      IADD3.X R7, R7, UR7, RZ, P6, !PT 
+      ISETP.NE.AND P6, PT, R35, RZ, PT 
+      ISETP.LT.AND P6, PT, R20, c[0x0][0x160], P6 
+      IADD3 R21, R38, 0x19, RZ 
+@P6   LDG.E.LTC128B R96, [R6.64] 
+      IADD3 R16, P6, R10, UR16, RZ 
+      IADD3.X R17, R11, UR17, RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R21, c[0x0][0x160], P4 
+@P6   LDG.E.LTC128B R98, [R16.64] 
+      IADD3 R12, P6, R10, UR14, RZ 
+      IADD3.X R13, R11, UR15, RZ, P6, !PT 
+      ISETP.NE.AND P6, PT, R34, RZ, PT 
+      ISETP.LT.AND P6, PT, R21, c[0x0][0x160], P6 
+@P6   LDG.E.LTC128B R114, [R12.64] 
+      IADD3 R14, P6, R10, UR6, RZ 
+      IADD3.X R15, R11, UR7, RZ, P6, !PT 
+      ISETP.NE.AND P6, PT, R35, RZ, PT 
+      ISETP.LT.AND P6, PT, R21, c[0x0][0x160], P6 
+@P6   LDG.E.LTC128B R116, [R14.64] 
+      IADD3 R10, P6, R10, c[0x0][0x200], RZ 
+      IADD3.X R11, R11, c[0x0][0x204], RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R21, c[0x0][0x160], P5 
+@P6   LDG.E.LTC128B R112, [R10.64] 
+      BAR.SYNC 0x0 
+      STS [R37.X4], R92 
+      IADD3 R6, P6, R4, c[0x0][0x250], RZ 
+      STS [R37.X4+0x4], R104 
+      IADD3.X R7, R5, c[0x0][0x254], RZ, P6, !PT 
+      IADD3 R12, P6, R4, UR10, RZ 
+      STS [R37.X4+0x8], R109 
+      IADD3.X R13, R5, UR11, RZ, P6, !PT 
+      STS [R37.X4+0xc], R62 
+      IADD3 R16, P6, R4, UR8, RZ 
+      STS [R37.X4+0x80], R58 
+      IADD3.X R17, R5, UR9, RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R20, c[0x0][0x160], P3 
+      STS [R37.X4+0x84], R68 
+      STS [R37.X4+0x88], R78 
+      STS [R37.X4+0x8c], R88 
+      BAR.SYNC 0x0 
+      LDS R15, [R36] 
+      LDS R19, [R36+0x100] 
+      FMUL R15, R15, R40 
+      FMUL R19, R19, R40 
+      FFMA R23, R28, R39, R15 
+@P6   STG.E [R6.64], R23 
+      IADD3 R14, P6, R4, UR4, RZ 
+      LDS R23, [R36+0x180] 
+      IADD3.X R15, R5, UR5, RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R20, c[0x0][0x160], P1 
+      LDS R5, [R36+0x80] 
+      FFMA R27, R42, R39, R19 
+      FMUL R23, R23, R40 
+      FMUL R5, R5, R40 
+      FFMA R25, R0, R39, R5 
+@P6   STG.E [R12.64], R25 
+      IADD3 R4, P6, R8, c[0x0][0x250], RZ 
+      IADD3.X R5, R9, c[0x0][0x254], RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R20, c[0x0][0x160], P2 
+      FFMA R25, R96, R39, R23 
+      LDS R23, [R36+0x488] 
+@P6   STG.E [R16.64], R27 
+      IADD3 R18, P6, R8, UR10, RZ 
+      IADD3.X R19, R9, UR11, RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R20, c[0x0][0x160], P0 
+      IADD3 R20, R38, 0x12, RZ 
+@P6   STG.E [R14.64], R25 
+      IADD3 R12, P6, R8, UR8, RZ 
+      LDS R15, [R36+0x588] 
+      IADD3.X R13, R9, UR9, RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R21, c[0x0][0x160], P3 
+      FMUL R23, R23, R40 
+      FMUL R15, R15, R40 
+      FFMA R23, R112, R39, R23 
+@P6   STG.E [R4.64], R23 
+      IADD3 R16, P6, R8, UR4, RZ 
+      IADD3.X R17, R9, UR5, RZ, P6, !PT 
+      LDS R9, [R36+0x508] 
+      ISETP.LT.AND P6, PT, R21, c[0x0][0x160], P1 
+      FFMA R23, R114, R39, R15 
+      LDS R15, [R36+0x608] 
+      FMUL R9, R9, R40 
+      FFMA R25, R98, R39, R9 
+      FMUL R15, R15, R40 
+@P6   STG.E [R18.64], R25 
+      IADD3 R8, P6, R2, c[0x0][0x200], RZ 
+      FFMA R27, R116, R39, R15 
+      IADD3.X R9, R3, c[0x0][0x204], RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R21, c[0x0][0x160], P2 
+@P6   STG.E [R12.64], R23 
+      ISETP.LT.AND P6, PT, R21, c[0x0][0x160], P0 
+@P6   STG.E [R16.64], R27 
+      ISETP.LT.AND P6, PT, R20, c[0x0][0x160], P5 
+@P6   LDG.E.LTC128B R28, [R8.64] 
+      IADD3 R14, P6, R2, UR16, RZ 
+      IADD3.X R15, R3, UR17, RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R20, c[0x0][0x160], P4 
+@P6   LDG.E.LTC128B R0, [R14.64] 
+      IADD3 R12, P6, R2, UR14, RZ 
+      IADD3.X R13, R3, UR15, RZ, P6, !PT 
+      ISETP.NE.AND P6, PT, R34, RZ, PT 
+      ISETP.LT.AND P6, PT, R20, c[0x0][0x160], P6 
+@P6   LDG.E.LTC128B R42, [R12.64] 
+      IADD3 R2, P6, R2, UR6, RZ 
+      IADD3.X R3, R3, UR7, RZ, P6, !PT 
+      ISETP.NE.AND P6, PT, R35, RZ, PT 
+      ISETP.LT.AND P6, PT, R20, c[0x0][0x160], P6 
+      IADD3 R21, R38, 0x1a, RZ 
+@P6   LDG.E.LTC128B R96, [R2.64] 
+      IADD3 R14, P6, R10, UR16, RZ 
+      IADD3.X R15, R11, UR17, RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R21, c[0x0][0x160], P4 
+@P6   LDG.E.LTC128B R98, [R14.64] 
+      IADD3 R12, P6, R10, UR14, RZ 
+      IADD3.X R13, R11, UR15, RZ, P6, !PT 
+      ISETP.NE.AND P6, PT, R34, RZ, PT 
+      ISETP.LT.AND P6, PT, R21, c[0x0][0x160], P6 
+@P6   LDG.E.LTC128B R114, [R12.64] 
+      IADD3 R16, P6, R10, UR6, RZ 
+      IADD3.X R17, R11, UR7, RZ, P6, !PT 
+      ISETP.NE.AND P6, PT, R35, RZ, PT 
+      ISETP.LT.AND P6, PT, R21, c[0x0][0x160], P6 
+@P6   LDG.E.LTC128B R116, [R16.64] 
+      IADD3 R10, P6, R10, c[0x0][0x200], RZ 
+      IADD3.X R11, R11, c[0x0][0x204], RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R21, c[0x0][0x160], P5 
+@P6   LDG.E.LTC128B R112, [R10.64] 
+      BAR.SYNC 0x0 
+      STS [R37.X4], R95 
+      IADD3 R2, P6, R6, c[0x0][0x250], RZ 
+      STS [R37.X4+0x4], R29 
+      IADD3.X R3, R7, c[0x0][0x254], RZ, P6, !PT 
+      IADD3 R12, P6, R6, UR10, RZ 
+      STS [R37.X4+0x8], R107 
+      IADD3.X R13, R7, UR11, RZ, P6, !PT 
+      STS [R37.X4+0xc], R106 
+      IADD3 R14, P6, R6, UR8, RZ 
+      STS [R37.X4+0x80], R57 
+      IADD3.X R15, R7, UR9, RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R20, c[0x0][0x160], P3 
+      STS [R37.X4+0x84], R67 
+      STS [R37.X4+0x88], R77 
+      STS [R37.X4+0x8c], R81 
+      BAR.SYNC 0x0 
+      LDS R17, [R36] 
+      LDS R19, [R36+0x100] 
+      FMUL R17, R17, R40 
+      FMUL R19, R19, R40 
+      FFMA R23, R28, R39, R17 
+@P6   STG.E [R2.64], R23 
+      IADD3 R16, P6, R6, UR4, RZ 
+      LDS R23, [R36+0x180] 
+      IADD3.X R17, R7, UR5, RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R20, c[0x0][0x160], P1 
+      LDS R7, [R36+0x80] 
+      FFMA R27, R42, R39, R19 
+      FMUL R23, R23, R40 
+      FMUL R7, R7, R40 
+      FFMA R25, R0, R39, R7 
+@P6   STG.E [R12.64], R25 
+      IADD3 R6, P6, R4, c[0x0][0x250], RZ 
+      IADD3.X R7, R5, c[0x0][0x254], RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R20, c[0x0][0x160], P2 
+      FFMA R25, R96, R39, R23 
+      LDS R23, [R36+0x488] 
+@P6   STG.E [R14.64], R27 
+      IADD3 R18, P6, R4, UR10, RZ 
+      LDS R15, [R36+0x508] 
+      IADD3.X R19, R5, UR11, RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R20, c[0x0][0x160], P0 
+      IADD3 R20, R38, 0x13, RZ 
+@P6   STG.E [R16.64], R25 
+      IADD3 R12, P6, R4, UR8, RZ 
+      LDS R17, [R36+0x588] 
+      IADD3.X R13, R5, UR9, RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R21, c[0x0][0x160], P3 
+      FMUL R14, R23, R40 
+      FMUL R15, R15, R40 
+      FFMA R25, R98, R39, R15 
+      FMUL R17, R17, R40 
+      FFMA R27, R114, R39, R17 
+      FFMA R23, R112, R39, R14 
+@P6   STG.E [R6.64], R23 
+      IADD3 R4, P6, R4, UR4, RZ 
+      LDS R23, [R36+0x608] 
+      IADD3.X R5, R5, UR5, RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R21, c[0x0][0x160], P1 
+@P6   STG.E [R18.64], R25 
+      IADD3 R14, P6, R8, c[0x0][0x200], RZ 
+      IADD3.X R15, R9, c[0x0][0x204], RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R21, c[0x0][0x160], P2 
+@P6   STG.E [R12.64], R27 
+      IADD3 R16, P6, R8, UR16, RZ 
+      FMUL R23, R23, R40 
+      IADD3.X R17, R9, UR17, RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R21, c[0x0][0x160], P0 
+      FFMA R23, R116, R39, R23 
+@P6   STG.E [R4.64], R23 
+      IADD3 R18, P6, R8, UR14, RZ 
+      IADD3.X R19, R9, UR15, RZ, P6, !PT 
+      ISETP.LT.AND P6, PT, R20, c[0x0][0x160], P5 
+@P6   LDG.E.LTC128B R28, [R14.64] 
+      ISETP.LT.AND P6, PT, R20, c[0x0][0x160], P4 
+@P6   LDG.E.LTC128B R0, [R16.64] 
+      ISETP.NE.AND P6, PT, R34, RZ, PT 
+      ISETP.LT.AND P6, PT, R20, c[0x0][0x160], P6 
+@P6   LDG.E.LTC128B R42, [R18.64] 
+      IADD3 R8, P6, R8, UR6, RZ 
+      IADD3.X R9, R9, UR7, RZ, P6, !PT 
+      ISETP.NE.AND P6, PT, R35, RZ, PT 
+      ISETP.LT.AND P6, PT, R20, c[0x0][0x160], P6 
+      IADD3 R38, R38, 0x1b, RZ 
+      ISETP.LT.AND P5, PT, R38, c[0x0][0x160], P5 
+@P6   LDG.E.LTC128B R96, [R8.64] 
+      IADD3 R4, P6, R10, c[0x0][0x200], RZ 
+      IADD3.X R5, R11, c[0x0][0x204], RZ, P6, !PT 
+      ISETP.LT.AND P4, PT, R38, c[0x0][0x160], P4 
+      ISETP.NE.AND P6, PT, R35, RZ, PT 
+@P5   LDG.E.LTC128B R112, [R4.64] 
+      IADD3 R12, P5, R10, UR16, RZ 
+      IADD3.X R13, R11, UR17, RZ, P5, !PT 
+      ISETP.NE.AND P5, PT, R34, RZ, PT 
+@P4   LDG.E.LTC128B R98, [R12.64] 
+      ISETP.LT.AND P5, PT, R38, c[0x0][0x160], P5 
+      IADD3 R8, P4, R10, UR14, RZ 
+      IADD3.X R9, R11, UR15, RZ, P4, !PT 
+      ISETP.LT.AND P4, PT, R38, c[0x0][0x160], P6 
+@P5   LDG.E.LTC128B R114, [R8.64] 
+      IADD3 R10, P5, R10, UR6, RZ 
+      IADD3.X R11, R11, UR7, RZ, P5, !PT 
+@P4   LDG.E.LTC128B R116, [R10.64] 
+      BAR.SYNC 0x0 
+      STS [R37.X4], R44 
+      STS [R37.X4+0x4], R100 
+      STS [R37.X4+0x8], R46 
+      STS [R37.X4+0xc], R52 
+      STS [R37.X4+0x80], R69 
+      STS [R37.X4+0x84], R70 
+      STS [R37.X4+0x88], R80 
+      STS [R37.X4+0x8c], R84 
+      BAR.SYNC 0x0 
+      LDS R5, [R36] 
+      LDS R11, [R36+0x80] 
+      LDS R13, [R36+0x100] 
+      LDS R15, [R36+0x180] 
+      LDS R17, [R36+0x488] 
+      LDS R19, [R36+0x508] 
+      LDS R21, [R36+0x588] 
+      ISETP.LT.AND P5, PT, R20, c[0x0][0x160], P3 
+      IADD3 R4, P6, R2, c[0x0][0x250], RZ 
+      LDS R23, [R36+0x608] 
+      ISETP.LT.AND P4, PT, R20, c[0x0][0x160], P1 
+      FMUL R9, R5, R40 
+      IADD3.X R5, R3, c[0x0][0x254], RZ, P6, !PT 
+      IADD3 R8, P6, R2, UR10, RZ 
+      FMUL R11, R11, R40 
+      FMUL R13, R13, R40 
+      FMUL R15, R15, R40 
+      ISETP.LT.AND P3, PT, R38, c[0x0][0x160], P3 
+      ISETP.LT.AND P1, PT, R38, c[0x0][0x160], P1 
+      FMUL R17, R17, R40 
+      FMUL R19, R19, R40 
+      FMUL R21, R21, R40 
+      FMUL R23, R23, R40 
+      FFMA R25, R28, R39, R9 
+      IADD3.X R9, R3, UR11, RZ, P6, !PT 
+      IADD3 R10, P6, R2, UR8, RZ 
+@P5   STG.E [R4.64], R25 
+      ISETP.LT.AND P5, PT, R20, c[0x0][0x160], P2 
+      FFMA R27, R0, R39, R11 
+      IADD3.X R11, R3, UR9, RZ, P6, !PT 
+@P4   STG.E [R8.64], R27 
+      ISETP.LT.AND P4, PT, R20, c[0x0][0x160], P0 
+      IADD3 R2, P6, R2, UR4, RZ 
+      IADD3.X R3, R3, UR5, RZ, P6, !PT 
+      FFMA R29, R42, R39, R13 
+      ISETP.LT.AND P2, PT, R38, c[0x0][0x160], P2 
+@P5   STG.E [R10.64], R29 
+      IADD3 R8, P5, R6, UR10, RZ 
+      ISETP.LT.AND P0, PT, R38, c[0x0][0x160], P0 
+      IADD3.X R9, R7, UR11, RZ, P5, !PT 
+      IADD3 R12, P6, R6, UR8, RZ 
+      FFMA R15, R96, R39, R15 
+@P4   STG.E [R2.64], R15 
+      IADD3 R4, P4, R6, c[0x0][0x250], RZ 
+      FFMA R17, R112, R39, R17 
+      IADD3.X R5, R7, c[0x0][0x254], RZ, P4, !PT 
+      IADD3.X R13, R7, UR9, RZ, P6, !PT 
+@P3   STG.E [R4.64], R17 
+      FFMA R19, R98, R39, R19 
+@P1   STG.E [R8.64], R19 
+      IADD3 R2, P1, R6, UR4, RZ 
+      FFMA R21, R114, R39, R21 
+      IADD3.X R3, R7, UR5, RZ, P1, !PT 
+@P2   STG.E [R12.64], R21 
+      FFMA R23, R116, R39, R23 
+@!P0  EXIT 
+      STG.E [R2.64], R23 
+      EXIT 
+      BAR.SYNC 0x0 
+      STS [R37.X4], R87 
+      ISETP.LT.AND P5, PT, R38, c[0x0][0x160], P3 
+      ULDC.64 UR4, c[0x0][0x250] 
+      ISETP.LT.AND P6, PT, R38, c[0x0][0x160], P1 
+      STS [R37.X4+0x4], R45 
+      ISETP.LT.AND P4, PT, R38, c[0x0][0x160], P2 
+      UIADD3 UR6, UP0, UR4, 0x80, URZ 
+      IADD3 R0, R38, 0x8, RZ 
+      STS [R37.X4+0x8], R103 
+      UIADD3.X UR7, URZ, UR5, URZ, UP0, !UPT 
+      STS [R37.X4+0xc], R47 
+      UIADD3 UR8, UP0, UR4, 0x100, URZ 
+@P5   IMAD.MOV.U32 R4, RZ, RZ, R20 
+@P5   MOV R5, R21 
+      STS [R37.X4+0x80], R61 
+      UIADD3.X UR9, URZ, UR5, URZ, UP0, !UPT 
+      UIADD3 UR4, UP0, UR4, 0x180, URZ 
+      STS [R37.X4+0x84], R72 
+      UIADD3.X UR5, URZ, UR5, URZ, UP0, !UPT 
+      STS [R37.X4+0x88], R73 
+      STS [R37.X4+0x8c], R31 
+      BAR.SYNC 0x0 
+      LDS R3, [R36] 
+      LDS R7, [R36+0x80] 
+      LDS R9, [R36+0x100] 
+      LDS R11, [R36+0x180] 
+      LDS R13, [R36+0x488] 
+      LDS R15, [R36+0x508] 
+      LDS R17, [R36+0x588] 
+      LDS R19, [R36+0x608] 
+      FMUL R23, R3, R40 
+      FMUL R7, R7, R40 
+@P5   STG.E [R4.64], R23 
+      ISETP.LT.AND P5, PT, R38, c[0x0][0x160], P0 
+      FMUL R9, R9, R40 
+      FMUL R11, R11, R40 
+      FMUL R13, R13, R40 
+@P6   MOV R5, R21 
+@P6   IMAD.MOV.U32 R4, RZ, RZ, R20 
+      FMUL R15, R15, R40 
+@P6   STG.E [R4.64+0x80], R7 
+      ISETP.LT.AND P6, PT, R0, c[0x0][0x160], P3 
+      FMUL R17, R17, R40 
+      FMUL R19, R19, R40 
+@P4   IMAD.MOV.U32 R4, RZ, RZ, R20 
+@P4   MOV R5, R21 
+@P4   STG.E [R4.64+0x100], R9 
+      IADD3 R2, P4, R20, c[0x0][0x240], RZ 
+      IADD3.X R3, R21, c[0x0][0x244], RZ, P4, !PT 
+      ISETP.LT.AND P4, PT, R0, c[0x0][0x160], P1 
+@P5   IMAD.MOV.U32 R4, RZ, RZ, R20 
+@P5   MOV R5, R21 
+@P5   STG.E [R4.64+0x180], R11 
+      ISETP.LT.AND P5, PT, R0, c[0x0][0x160], P2 
+@P6   STG.E [R2.64], R13 
+      ISETP.LT.AND P6, PT, R0, c[0x0][0x160], P0 
+      IADD3 R0, R38, 0x1, RZ 
+@P4   STG.E [R2.64+0x80], R15 
+      ISETP.LT.AND P4, PT, R0, c[0x0][0x160], P1 
+@P5   IMAD.MOV.U32 R4, RZ, RZ, R2 
+@P5   MOV R5, R3 
+@P5   STG.E [R4.64+0x100], R17 
+      ISETP.LT.AND P5, PT, R0, c[0x0][0x160], P3 
+@P6   STG.E [R2.64+0x180], R19 
+      BAR.SYNC 0x0 
+      STS [R37.X4], R89 
+      IADD3 R4, P6, R20, c[0x0][0x250], RZ 
+      STS [R37.X4+0x4], R48 
+      IADD3.X R5, R21, c[0x0][0x254], RZ, P6, !PT 
+      IADD3 R6, P6, R20, UR6, RZ 
+      STS [R37.X4+0x8], R54 
+      STS [R37.X4+0xc], R86 
+      STS [R37.X4+0x80], R60 
+      STS [R37.X4+0x84], R64 
+      STS [R37.X4+0x88], R74 
+      STS [R37.X4+0x8c], R90 
+      BAR.SYNC 0x0 
+      LDS R7, [R36] 
+      LDS R9, [R36+0x80] 
+      LDS R11, [R36+0x100] 
+      LDS R13, [R36+0x180] 
+      LDS R15, [R36+0x488] 
+      LDS R17, [R36+0x508] 
+      LDS R19, [R36+0x588] 
+      FMUL R23, R7, R40 
+      IADD3.X R7, R21, UR7, RZ, P6, !PT 
+      IADD3 R8, P6, R20, UR8, RZ 
+      FMUL R25, R9, R40 
+@P5   STG.E [R4.64], R23 
+      ISETP.LT.AND P5, PT, R0, c[0x0][0x160], P2 
+      IADD3.X R9, R21, UR9, RZ, P6, !PT 
+      LDS R23, [R36+0x608] 
+      IADD3 R10, P6, R20, UR4, RZ 
+      FMUL R27, R11, R40 
+@P4   STG.E [R6.64], R25 
+      ISETP.LT.AND P4, PT, R0, c[0x0][0x160], P0 
+      IADD3.X R11, R21, UR5, RZ, P6, !PT 
+      FMUL R21, R13, R40 
+      IADD3 R0, R38, 0x9, RZ 
+@P5   STG.E [R8.64], R27 
+      FMUL R15, R15, R40 
+      ISETP.LT.AND P5, PT, R0, c[0x0][0x160], P3 
+      FMUL R17, R17, R40 
+      IADD3 R6, P6, R2, c[0x0][0x250], RZ 
+      FMUL R19, R19, R40 
+@P4   STG.E [R10.64], R21 
+      ISETP.LT.AND P4, PT, R0, c[0x0][0x160], P1 
+      IADD3.X R7, R3, c[0x0][0x254], RZ, P6, !PT 
+      IADD3 R12, P6, R2, UR6, RZ 
+@P5   STG.E [R6.64], R15 
+      IADD3.X R13, R3, UR7, RZ, P6, !PT 
+      ISETP.LT.AND P5, PT, R0, c[0x0][0x160], P2 
+      IADD3 R8, P6, R2, UR8, RZ 
+@P4   STG.E [R12.64], R17 
+      ISETP.LT.AND P4, PT, R0, c[0x0][0x160], P0 
+      IADD3.X R9, R3, UR9, RZ, P6, !PT 
+      IADD3 R2, P6, R2, UR4, RZ 
+      IADD3 R0, R38, 0x2, RZ 
+      FMUL R23, R23, R40 
+      IADD3.X R3, R3, UR5, RZ, P6, !PT 
+@P5   STG.E [R8.64], R19 
+      ISETP.LT.AND P5, PT, R0, c[0x0][0x160], P3 
+@P4   STG.E [R2.64], R23 
+      BAR.SYNC 0x0 
+      STS [R37.X4], R91 
+      ISETP.LT.AND P4, PT, R0, c[0x0][0x160], P1 
+      IADD3 R2, P6, R4, c[0x0][0x250], RZ 
+      STS [R37.X4+0x4], R30 
+      IADD3.X R3, R5, c[0x0][0x254], RZ, P6, !PT 
+      STS [R37.X4+0x8], R105 
+      IADD3 R8, P6, R4, UR6, RZ 
+      STS [R37.X4+0xc], R113 
+      STS [R37.X4+0x80], R55 
+      STS [R37.X4+0x84], R71 
+      STS [R37.X4+0x88], R75 
+      STS [R37.X4+0x8c], R83 
+      BAR.SYNC 0x0 
+      LDS R9, [R36] 
+      LDS R11, [R36+0x80] 
+      LDS R13, [R36+0x100] 
+      LDS R15, [R36+0x180] 
+      LDS R17, [R36+0x488] 
+      LDS R19, [R36+0x508] 
+      LDS R21, [R36+0x588] 
+      LDS R23, [R36+0x608] 
+      FMUL R25, R9, R40 
+      IADD3.X R9, R5, UR7, RZ, P6, !PT 
+      IADD3 R10, P6, R4, UR8, RZ 
+      FMUL R27, R11, R40 
+@P5   STG.E [R2.64], R25 
+      ISETP.LT.AND P5, PT, R0, c[0x0][0x160], P2 
+      IADD3.X R11, R5, UR9, RZ, P6, !PT 
+@P4   STG.E [R8.64], R27 
+      ISETP.LT.AND P4, PT, R0, c[0x0][0x160], P0 
+      FMUL R31, R13, R40 
+      IADD3 R12, P6, R4, UR4, RZ 
+      FMUL R15, R15, R40 
+      IADD3 R0, R38, 0xa, RZ 
+      IADD3.X R13, R5, UR5, RZ, P6, !PT 
+      FMUL R17, R17, R40 
+      IADD3 R4, P6, R6, c[0x0][0x250], RZ 
+@P5   STG.E [R10.64], R31 
+      ISETP.LT.AND P5, PT, R0, c[0x0][0x160], P3 
+      FMUL R19, R19, R40 
+      IADD3.X R5, R7, c[0x0][0x254], RZ, P6, !PT 
+@P4   STG.E [R12.64], R15 
+      ISETP.LT.AND P4, PT, R0, c[0x0][0x160], P1 
+      FMUL R21, R21, R40 
+      IADD3 R8, P6, R6, UR6, RZ 
+      FMUL R23, R23, R40 
+      IADD3.X R9, R7, UR7, RZ, P6, !PT 
+      IADD3 R10, P6, R6, UR8, RZ 
+@P5   STG.E [R4.64], R17 
+      ISETP.LT.AND P5, PT, R0, c[0x0][0x160], P2 
+      IADD3.X R11, R7, UR9, RZ, P6, !PT 
+@P4   STG.E [R8.64], R19 
+      ISETP.LT.AND P4, PT, R0, c[0x0][0x160], P0 
+      IADD3 R6, P6, R6, UR4, RZ 
+      IADD3 R0, R38, 0x3, RZ 
+      IADD3.X R7, R7, UR5, RZ, P6, !PT 
+@P5   STG.E [R10.64], R21 
+      ISETP.LT.AND P5, PT, R0, c[0x0][0x160], P3 
+@P4   STG.E [R6.64], R23 
+      BAR.SYNC 0x0 
+      STS [R37.X4], R94 
+      ISETP.LT.AND P4, PT, R0, c[0x0][0x160], P1 
+      IADD3 R6, P6, R2, c[0x0][0x250], RZ 
+      STS [R37.X4+0x4], R102 
+      IADD3.X R7, R3, c[0x0][0x254], RZ, P6, !PT 
+      STS [R37.X4+0x8], R110 
+      IADD3 R8, P6, R2, UR6, RZ 
+      STS [R37.X4+0xc], R50 
+      STS [R37.X4+0x80], R56 
+      STS [R37.X4+0x84], R66 
+      STS [R37.X4+0x88], R76 
+      STS [R37.X4+0x8c], R82 
+      BAR.SYNC 0x0 
+      LDS R9, [R36] 
+      LDS R11, [R36+0x80] 
+      LDS R13, [R36+0x100] 
+      LDS R15, [R36+0x180] 
+      LDS R17, [R36+0x488] 
+      LDS R19, [R36+0x508] 
+      LDS R21, [R36+0x588] 
+      LDS R23, [R36+0x608] 
+      FMUL R25, R9, R40 
+      IADD3.X R9, R3, UR7, RZ, P6, !PT 
+      IADD3 R10, P6, R2, UR8, RZ 
+      FMUL R27, R11, R40 
+@P5   STG.E [R6.64], R25 
+      ISETP.LT.AND P5, PT, R0, c[0x0][0x160], P2 
+      IADD3.X R11, R3, UR9, RZ, P6, !PT 
+@P4   STG.E [R8.64], R27 
+      ISETP.LT.AND P4, PT, R0, c[0x0][0x160], P0 
+      FMUL R31, R13, R40 
+      IADD3 R2, P6, R2, UR4, RZ 
+      FMUL R15, R15, R40 
+      IADD3 R0, R38, 0xb, RZ 
+      IADD3.X R3, R3, UR5, RZ, P6, !PT 
+      FMUL R17, R17, R40 
+@P5   STG.E [R10.64], R31 
+      ISETP.LT.AND P5, PT, R0, c[0x0][0x160], P3 
+      FMUL R19, R19, R40 
+      IADD3 R8, P6, R4, c[0x0][0x250], RZ 
+@P4   STG.E [R2.64], R15 
+      ISETP.LT.AND P4, PT, R0, c[0x0][0x160], P1 
+      FMUL R21, R21, R40 
+      IADD3.X R9, R5, c[0x0][0x254], RZ, P6, !PT 
+      IADD3 R12, P6, R4, UR6, RZ 
+      FMUL R23, R23, R40 
+      IADD3.X R13, R5, UR7, RZ, P6, !PT 
+@P5   STG.E [R8.64], R17 
+      ISETP.LT.AND P5, PT, R0, c[0x0][0x160], P2 
+      IADD3 R2, P6, R4, UR8, RZ 
+@P4   STG.E [R12.64], R19 
+      ISETP.LT.AND P4, PT, R0, c[0x0][0x160], P0 
+      IADD3.X R3, R5, UR9, RZ, P6, !PT 
+      IADD3 R4, P6, R4, UR4, RZ 
+      IADD3 R0, R38, 0x10, RZ 
+      IADD3.X R5, R5, UR5, RZ, P6, !PT 
+@P5   STG.E [R2.64], R21 
+@P4   STG.E [R4.64], R23 
+      BAR.SYNC 0x0 
+      STS [R37.X4], R93 
+      IMAD.MOV.U32 R3, RZ, RZ, c[0x0][0x258] 
+      ISETP.LT.AND P4, PT, R0, c[0x0][0x160], P3 
+      STS [R37.X4+0x4], R108 
+      IADD3 R2, P5, P6, R6, c[0x0][0x250], R3 
+      STS [R37.X4+0x8], R111 
+      MOV R3, c[0x0][0x25c] 
+      STS [R37.X4+0xc], R63 
+      IADD3.X R3, R7, c[0x0][0x254], R3, P5, P6 
+      ISETP.LT.AND P6, PT, R0, c[0x0][0x160], P1 
+      STS [R37.X4+0x80], R59 
+      ISETP.LT.AND P5, PT, R0, c[0x0][0x160], P2 
+      STS [R37.X4+0x84], R65 
+      STS [R37.X4+0x88], R79 
+      STS [R37.X4+0x8c], R85 
+      BAR.SYNC 0x0 
+      LDS R5, [R36] 
+      LDS R9, [R36+0x80] 
+      LDS R11, [R36+0x100] 
+      LDS R13, [R36+0x180] 
+      LDS R15, [R36+0x488] 
+      LDS R17, [R36+0x508] 
+      LDS R7, [R36+0x588] 
+      LDS R19, [R36+0x608] 
+      FMUL R21, R5, R40 
+      FMUL R9, R9, R40 
+@P4   STG.E [R2.64], R21 
+      ISETP.LT.AND P4, PT, R0, c[0x0][0x160], P0 
+      IADD3 R0, R38, 0x18, RZ 
+      FMUL R11, R11, R40 
+@P6   STG.E [R2.64+0x80], R9 
+      ISETP.LT.AND P6, PT, R0, c[0x0][0x160], P3 
+      FMUL R13, R13, R40 
+@P5   STG.E [R2.64+0x100], R11 
+      IADD3 R4, P5, R2, c[0x0][0x240], RZ 
+      FMUL R15, R15, R40 
+      IADD3.X R5, R3, c[0x0][0x244], RZ, P5, !PT 
+@P4   STG.E [R2.64+0x180], R13 
+      ISETP.LT.AND P4, PT, R0, c[0x0][0x160], P1 
+      FMUL R17, R17, R40 
+      ISETP.LT.AND P5, PT, R0, c[0x0][0x160], P2 
+      FMUL R9, R7, R40 
+@P6   STG.E [R4.64], R15 
+      ISETP.LT.AND P6, PT, R0, c[0x0][0x160], P0 
+      FMUL R19, R19, R40 
+      IADD3 R0, R38, 0x11, RZ 
+@P4   STG.E [R4.64+0x80], R17 
+      ISETP.LT.AND P4, PT, R0, c[0x0][0x160], P1 
+@P5   STG.E [R4.64+0x100], R9 
+@P6   IMAD.MOV.U32 R6, RZ, RZ, R4 
+@P6   MOV R7, R5 
+      ISETP.LT.AND P5, PT, R0, c[0x0][0x160], P3 
+@P6   STG.E [R6.64+0x180], R19 
+      BAR.SYNC 0x0 
+      STS [R37.X4], R92 
+      IADD3 R6, P6, R2, c[0x0][0x250], RZ 
+      STS [R37.X4+0x4], R104 
+      IADD3.X R7, R3, c[0x0][0x254], RZ, P6, !PT 
+      STS [R37.X4+0x8], R109 
+      IADD3 R8, P6, R2, UR6, RZ 
+      STS [R37.X4+0xc], R62 
+      STS [R37.X4+0x80], R58 
+      STS [R37.X4+0x84], R68 
+      STS [R37.X4+0x88], R78 
+      STS [R37.X4+0x8c], R88 
+      BAR.SYNC 0x0 
+      LDS R9, [R36] 
+      LDS R11, [R36+0x80] 
+      LDS R13, [R36+0x100] 
+      LDS R15, [R36+0x180] 
+      LDS R17, [R36+0x488] 
+      LDS R19, [R36+0x508] 
+      LDS R21, [R36+0x588] 
+      LDS R23, [R36+0x608] 
+      FMUL R25, R9, R40 
+      IADD3.X R9, R3, UR7, RZ, P6, !PT 
+      IADD3 R10, P6, R2, UR8, RZ 
+      FMUL R27, R11, R40 
+@P5   STG.E [R6.64], R25 
+      ISETP.LT.AND P5, PT, R0, c[0x0][0x160], P2 
+      IADD3.X R11, R3, UR9, RZ, P6, !PT 
+@P4   STG.E [R8.64], R27 
+      ISETP.LT.AND P4, PT, R0, c[0x0][0x160], P0 
+      FMUL R31, R13, R40 
+      IADD3 R2, P6, R2, UR4, RZ 
+      FMUL R15, R15, R40 
+      IADD3 R0, R38, 0x19, RZ 
+      IADD3.X R3, R3, UR5, RZ, P6, !PT 
+      FMUL R17, R17, R40 
+@P5   STG.E [R10.64], R31 
+      ISETP.LT.AND P5, PT, R0, c[0x0][0x160], P3 
+      FMUL R19, R19, R40 
+      IADD3 R8, P6, R4, c[0x0][0x250], RZ 
+@P4   STG.E [R2.64], R15 
+      ISETP.LT.AND P4, PT, R0, c[0x0][0x160], P1 
+      FMUL R21, R21, R40 
+      IADD3.X R9, R5, c[0x0][0x254], RZ, P6, !PT 
+      IADD3 R12, P6, R4, UR6, RZ 
+      FMUL R23, R23, R40 
+      IADD3.X R13, R5, UR7, RZ, P6, !PT 
+@P5   STG.E [R8.64], R17 
+      ISETP.LT.AND P5, PT, R0, c[0x0][0x160], P2 
+      IADD3 R2, P6, R4, UR8, RZ 
+@P4   STG.E [R12.64], R19 
+      ISETP.LT.AND P4, PT, R0, c[0x0][0x160], P0 
+      IADD3.X R3, R5, UR9, RZ, P6, !PT 
+      IADD3 R4, P6, R4, UR4, RZ 
+      IADD3 R0, R38, 0x12, RZ 
+      IADD3.X R5, R5, UR5, RZ, P6, !PT 
+@P5   STG.E [R2.64], R21 
+      ISETP.LT.AND P5, PT, R0, c[0x0][0x160], P3 
+@P4   STG.E [R4.64], R23 
+      BAR.SYNC 0x0 
+      STS [R37.X4], R95 
+      IADD3 R2, P6, R6, c[0x0][0x250], RZ 
+      ISETP.LT.AND P4, PT, R0, c[0x0][0x160], P1 
+      STS [R37.X4+0x4], R29 
+      IADD3.X R3, R7, c[0x0][0x254], RZ, P6, !PT 
+      IADD3 R4, P6, R6, UR6, RZ 
+      STS [R37.X4+0x8], R107 
+      STS [R37.X4+0xc], R106 
+      STS [R37.X4+0x80], R57 
+      STS [R37.X4+0x84], R67 
+      STS [R37.X4+0x88], R77 
+      STS [R37.X4+0x8c], R81 
+      BAR.SYNC 0x0 
+      LDS R5, [R36] 
+      LDS R11, [R36+0x80] 
+      LDS R13, [R36+0x100] 
+      LDS R15, [R36+0x180] 
+      LDS R17, [R36+0x488] 
+      LDS R19, [R36+0x508] 
+      LDS R21, [R36+0x588] 
+      LDS R23, [R36+0x608] 
+      FMUL R25, R5, R40 
+      IADD3.X R5, R7, UR7, RZ, P6, !PT 
+      IADD3 R10, P6, R6, UR8, RZ 
+      FMUL R27, R11, R40 
+@P5   STG.E [R2.64], R25 
+      ISETP.LT.AND P5, PT, R0, c[0x0][0x160], P2 
+      IADD3.X R11, R7, UR9, RZ, P6, !PT 
+@P4   STG.E [R4.64], R27 
+      ISETP.LT.AND P4, PT, R0, c[0x0][0x160], P0 
+      FMUL R29, R13, R40 
+      IADD3 R6, P6, R6, UR4, RZ 
+      FMUL R15, R15, R40 
+      IADD3 R0, R38, 0x1a, RZ 
+      IADD3.X R7, R7, UR5, RZ, P6, !PT 
+      FMUL R17, R17, R40 
+@P5   STG.E [R10.64], R29 
+      ISETP.LT.AND P5, PT, R0, c[0x0][0x160], P3 
+      FMUL R19, R19, R40 
+      IADD3 R4, P6, R8, c[0x0][0x250], RZ 
+@P4   STG.E [R6.64], R15 
+      ISETP.LT.AND P4, PT, R0, c[0x0][0x160], P1 
+      FMUL R21, R21, R40 
+      IADD3.X R5, R9, c[0x0][0x254], RZ, P6, !PT 
+      IADD3 R12, P6, R8, UR6, RZ 
+      FMUL R23, R23, R40 
+      IADD3.X R13, R9, UR7, RZ, P6, !PT 
+@P5   STG.E [R4.64], R17 
+      ISETP.LT.AND P5, PT, R0, c[0x0][0x160], P2 
+      IADD3 R6, P6, R8, UR8, RZ 
+@P4   STG.E [R12.64], R19 
+      ISETP.LT.AND P4, PT, R0, c[0x0][0x160], P0 
+      IADD3.X R7, R9, UR9, RZ, P6, !PT 
+      IADD3 R8, P6, R8, UR4, RZ 
+      IADD3 R0, R38, 0x13, RZ 
+      IADD3.X R9, R9, UR5, RZ, P6, !PT 
+@P5   STG.E [R6.64], R21 
+      ISETP.LT.AND P5, PT, R0, c[0x0][0x160], P3 
+      IADD3 R38, R38, 0x1b, RZ 
+@P4   STG.E [R8.64], R23 
+      BAR.SYNC 0x0 
+      STS [R37.X4], R44 
+      IADD3 R6, P4, R2, c[0x0][0x250], RZ 
+      IADD3 R8, P6, R2, UR6, RZ 
+      STS [R37.X4+0x4], R100 
+      IADD3.X R7, R3, c[0x0][0x254], RZ, P4, !PT 
+      ISETP.LT.AND P4, PT, R0, c[0x0][0x160], P1 
+      STS [R37.X4+0x8], R46 
+      ISETP.LT.AND P3, PT, R38, c[0x0][0x160], P3 
+      ISETP.LT.AND P1, PT, R38, c[0x0][0x160], P1 
+      STS [R37.X4+0xc], R52 
+      STS [R37.X4+0x80], R69 
+      STS [R37.X4+0x84], R70 
+      STS [R37.X4+0x88], R80 
+      STS [R37.X4+0x8c], R84 
+      BAR.SYNC 0x0 
+      LDS R9, [R36] 
+      LDS R11, [R36+0x80] 
+      LDS R13, [R36+0x100] 
+      LDS R15, [R36+0x180] 
+      LDS R17, [R36+0x488] 
+      LDS R19, [R36+0x508] 
+      LDS R21, [R36+0x588] 
+      LDS R23, [R36+0x608] 
+      FMUL R25, R9, R40 
+      IADD3.X R9, R3, UR7, RZ, P6, !PT 
+      IADD3 R10, P6, R2, UR8, RZ 
+      FMUL R27, R11, R40 
+@P5   STG.E [R6.64], R25 
+      ISETP.LT.AND P5, PT, R0, c[0x0][0x160], P2 
+      IADD3.X R11, R3, UR9, RZ, P6, !PT 
+      FMUL R13, R13, R40 
+@P4   STG.E [R8.64], R27 
+      ISETP.LT.AND P4, PT, R0, c[0x0][0x160], P0 
+      FMUL R15, R15, R40 
+      ISETP.LT.AND P2, PT, R38, c[0x0][0x160], P2 
+      ISETP.LT.AND P0, PT, R38, c[0x0][0x160], P0 
+      FMUL R17, R17, R40 
+@P5   STG.E [R10.64], R13 
+      IADD3 R2, P5, R2, UR4, RZ 
+      FMUL R19, R19, R40 
+      IADD3 R8, P6, R4, UR6, RZ 
+      IADD3.X R3, R3, UR5, RZ, P5, !PT 
+      FMUL R21, R21, R40 
+      IADD3 R6, P5, R4, c[0x0][0x250], RZ 
+      IADD3.X R9, R5, UR7, RZ, P6, !PT 
+@P4   STG.E [R2.64], R15 
+      IADD3.X R7, R5, c[0x0][0x254], RZ, P5, !PT 
+      FMUL R23, R23, R40 
+      IADD3 R10, P4, R4, UR8, RZ 
+@P3   STG.E [R6.64], R17 
+      IADD3.X R11, R5, UR9, RZ, P4, !PT 
+@P1   STG.E [R8.64], R19 
+      IADD3 R4, P1, R4, UR4, RZ 
+@P2   STG.E [R10.64], R21 
+      IADD3.X R5, R5, UR5, RZ, P1, !PT 
+@!P0  EXIT 
+      STG.E [R4.64], R23 
+      EXIT 
+      BRA 0x14e69528c630
+      NOP
+      NOP
+      NOP
+      NOP
+      NOP
+      NOP
+      NOP
+      NOP
+      NOP
+      NOP
+      NOP
+      NOP

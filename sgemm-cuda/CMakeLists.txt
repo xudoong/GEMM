@@ -19,6 +19,7 @@ set(CUDA_COMPUTE_CAPABILITY 80)
 # Configure header file search paths
 include_directories(${CUDA_INCLUDE_DIRS})
 include_directories(${PROJECT_SOURCE_DIR}/src)
+include_directories(/dssg/home/acct-hpc/hpcwxd/repos/cutlass/include)
 # Configure the source file path to be compiled
 aux_source_directory(${PROJECT_SOURCE_DIR}/src SRC1)
 aux_source_directory(${PROJECT_SOURCE_DIR}/src/kernels SRC2)

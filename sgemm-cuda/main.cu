@@ -138,6 +138,16 @@ int main(int argc, char **argv)
             }
         }
 
+        // // nsight profile begin
+        // for (int kernel_number = 0; kernel_number < 7; kernel_number++) {
+        //     for (int repeat = 0; repeat < 3; repeat++) {
+        //         run_kernel(kernel_number, handle, m, n, k, alpha, dA, dB, beta, dC);
+        //     }
+        // }
+        // continue;
+        // // nsight profile end
+
+
         // warmup
         for (int j = 0; j < 5; j++)
         {

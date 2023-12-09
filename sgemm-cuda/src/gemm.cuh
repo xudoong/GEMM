@@ -19,3 +19,4 @@ void gemm_02_ideal(GEMM_FUNC_SIGNITURE);
 void gemm_03_shmem(GEMM_FUNC_SIGNITURE);
 void gemm_04_warp_tiling(GEMM_FUNC_SIGNITURE);
 void gemm_05_shmem_plus_vectorize(GEMM_FUNC_SIGNITURE);
+void gemm_06_cutlass(GEMM_FUNC_SIGNITURE);
