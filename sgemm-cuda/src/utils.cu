@@ -161,6 +161,9 @@ void run_kernel(int kernel_num, cublasHandle_t handle, GEMM_FUNC_SIGNITURE)
     case 6:
         gemm_06_cutlass(GEMM_FUNC_PARAM);
         break;
+    case 7:
+        gemm_07_rm_bank_conflict(GEMM_FUNC_PARAM);
+        break;
     default:
         throw std::invalid_argument("Unknown kernel number");
     }

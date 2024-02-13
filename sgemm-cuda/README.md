@@ -4,6 +4,16 @@ This directory is built upon [siboehm-SGEMM_CUDA](https://github.com/siboehm/SGE
 
 The experiments run on one A100 GPU.
 
+### TODO
+
+- [ ] Double buffer global to shared memory read
+
+### Description
+
+* K3 shmem: shared memory + register tiling. Has 2-fold bank conflict when loading the matrix A from shared memory to register. As the warp is organize as 2x16(mxn). The A[*, k] values locate in the same bank in the shared memory.
+* K4 warptiling: Organize a warp as 4x8.
+* K5: Based on K3, in addition using 128-bit load from the gloval memory to the shared memory.
+* K7: Based on K5, remove the bank conflict by padding the A matrix in shared memory with 4 32-bit words.
 ### MY result
 
 |                         | **Median TFLOPS** | **STD** | **%cuBLAS** |
@@ -14,7 +24,7 @@ The experiments run on one A100 GPU.
 | **K4 warptiling**       | 15.1              | 0.4     | 86%         |
 | **K5 shmem+vectorize**  | 15.9              | 0.46    | 90%         |
 | **K6 cutlass (ref)**    | 16.1              | 0.52    | 91%         |
-
+| **K7 rm bank conflict** | 16.05             | 0.39    | 91%         |
 The performance of the simple kernel 03 (shared memory plus 2D tiling on threads) is very close to that of cutlass.
 Adding more optimizations to Kernel 03 doesn't provide speedup.
 
