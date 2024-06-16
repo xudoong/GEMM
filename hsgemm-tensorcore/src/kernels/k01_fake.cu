@@ -21,5 +21,5 @@ __global__ static void kernel(GEMM_FUNC_SIGNITURE) {
 void gemm_01_fake(GEMM_FUNC_SIGNITURE) {
     dim3 gridDim(CEIL_DIV(M, ctaM), CEIL_DIV(N, ctaN));
     dim3 blockDim(32, ctaM / wmmaM, ctaN / wmmaN);
-    kernel<<<gridDim, blockDim>>>(M, N, K, alpha, A, B, beta, C);
+    kernel<<<gridDim, blockDim>>>(GEMM_FUNC_PARAM);
 }

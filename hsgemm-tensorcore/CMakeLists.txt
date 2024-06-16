@@ -11,6 +11,8 @@ check_language(CUDA)
 set(CMAKE_CXX_STANDARD 20)
 set(CUDA_COMPUTE_CAPABILITY 80)
 
+set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -diag-suppress=20054")
+
 # in debug mode, add debug symbols to device code
 # this disables most optimizations and kills performance
 # add_compile_options("$<$<AND:$<CONFIG:Debug>,$<COMPILE_LANGUAGE:CUDA>>:-G;-src-in-ptx;>")
