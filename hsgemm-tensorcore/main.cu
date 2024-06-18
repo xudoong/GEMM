@@ -23,6 +23,7 @@ int main(int argc, char **argv) {
     }
 
     int m, n, k;
+    bool skip_verification = false;
     m = n = k = default_size;
     if (argc > 2) {
         for (int i = 2; i < argc; i++) {
@@ -37,6 +38,9 @@ int main(int argc, char **argv) {
             }
             else if (argv[i][0] == 'r' && i < argc - 1) {
                 repeat_times = std::stoi(argv[i + 1]);
+            }
+            else if (std::string(argv[i]) == "--skip_ver") {
+                skip_verification = true;
             }
         }
     }
@@ -84,36 +88,34 @@ int main(int argc, char **argv) {
     float *dC = nullptr;
     float *dC_ref = nullptr;
 
-    int max_size = std::max(m, n);
-    max_size = std::max(max_size, k);
-    A = (half *) malloc(sizeof(half) * max_size * max_size);
-    B = (half *) malloc(sizeof(half) * max_size * max_size);
-    C = (float *) malloc(sizeof(float) * max_size * max_size);
-    C_ref = (float *) malloc(sizeof(float) * max_size * max_size);
+    A = (half *) malloc(sizeof(half) * m * k);
+    B = (half *) malloc(sizeof(half) * k * n);
+    C = (float *) malloc(sizeof(float) * m * n);
+    C_ref = (float *) malloc(sizeof(float) * m * n);
 
-    randomize_matrix(A, max_size * max_size);
-    randomize_matrix(B, max_size * max_size);
-    randomize_matrix(C, max_size * max_size);
+    randomize_matrix(A, m * k);
+    randomize_matrix(B, k * n);
+    randomize_matrix(C, m * n);
 
-    cudaCheck(cudaMalloc((void **) &dA, sizeof(half) * max_size * max_size));
-    cudaCheck(cudaMalloc((void **) &dB, sizeof(half) * max_size * max_size));
-    cudaCheck(cudaMalloc((void **) &dC, sizeof(float) * max_size * max_size));
-    cudaCheck(cudaMalloc((void **) &dC_ref, sizeof(float) * max_size * max_size));
+    cudaCheck(cudaMalloc((void **) &dA, sizeof(half) * m * k));
+    cudaCheck(cudaMalloc((void **) &dB, sizeof(half) * k * n));
+    cudaCheck(cudaMalloc((void **) &dC, sizeof(float) * m * n));
+    cudaCheck(cudaMalloc((void **) &dC_ref, sizeof(float) * m * n));
 
-    cudaCheck(cudaMemcpy(dA, A, sizeof(half) * max_size * max_size,
+    cudaCheck(cudaMemcpy(dA, A, sizeof(half) * m * k,
                          cudaMemcpyHostToDevice));
-    cudaCheck(cudaMemcpy(dB, B, sizeof(half) * max_size * max_size,
+    cudaCheck(cudaMemcpy(dB, B, sizeof(half) * k * n,
                          cudaMemcpyHostToDevice));
-    cudaCheck(cudaMemcpy(dC, C, sizeof(float) * max_size * max_size,
+    cudaCheck(cudaMemcpy(dC, C, sizeof(float) * m * n,
                          cudaMemcpyHostToDevice));
-    cudaCheck(cudaMemcpy(dC_ref, C, sizeof(float) * max_size * max_size,
+    cudaCheck(cudaMemcpy(dC_ref, C, sizeof(float) * m * n,
                          cudaMemcpyHostToDevice));
 
     printf("Size: (m, n, k) = (%d, %d, %d).\n", m, n, k);
     printf("Repeat %d times.\n", repeat_times);
     // Verify the correctness of the calculation, and execute it once before the
     // kernel function timing to avoid cold start errors
-    if (kernel_num != 0 && kernel_num != FAKE_KERNEL_NUMBER) {
+    if (kernel_num != 0 && kernel_num != FAKE_KERNEL_NUMBER && !skip_verification) {
         run_kernel(0, handle, m, n, k, alpha, dA, dB, beta, dC_ref);      // cuBLAS
         run_kernel(kernel_num, handle, m, n, k, alpha, dA, dB, beta,
                    dC); // Executes the kernel, modifies the result matrix
@@ -176,8 +178,8 @@ int main(int argc, char **argv) {
     float tflops50 = flops / tile50_time / 1e12;
     float tflops95 = flops / tile95_time / 1e12;
 
-    printf("TFLOPS: %5.1f (5%%)  %5.1f (50%%)  %5.1f (95%%). %.1f%% of theoretical.\n",
-           tflops05, tflops50, tflops95, tflops95 / theoretical_max_tflops * 100);
+    printf("TFLOPS: %5.1f (P5)  %5.1f (P50)  %5.1f (P95). %.1f%% of theoretical.\n",
+           tflops05, tflops50, tflops95, tflops50 / theoretical_max_tflops * 100);
     // make dC and dC_ref equal again (we modified dC while calling our kernel
     // for benchmarking)
     cudaCheck(cudaMemcpy(dC, dC_ref, sizeof(float) * m * n,

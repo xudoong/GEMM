@@ -11,7 +11,9 @@ check_language(CUDA)
 set(CMAKE_CXX_STANDARD 20)
 set(CUDA_COMPUTE_CAPABILITY 80)
 
-set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -diag-suppress=20054")
+file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/temp)
+
+set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -diag-suppress=20054 --keep --keep-dir ${CMAKE_BINARY_DIR}/temp")
 
 # in debug mode, add debug symbols to device code
 # this disables most optimizations and kills performance

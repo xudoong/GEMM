@@ -22,3 +22,4 @@ void gemm_02_naive(GEMM_FUNC_SIGNITURE);
 void gemm_03_wmma_shmem(GEMM_FUNC_SIGNITURE);
 void gemm_04_wmma_shmem_opt(GEMM_FUNC_SIGNITURE);
 void gemm_05_wmma_pipeline(GEMM_FUNC_SIGNITURE);
+void gemm_06_mma(GEMM_FUNC_SIGNITURE);
