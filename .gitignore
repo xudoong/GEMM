@@ -6,3 +6,5 @@ cpu_serial/src/dgemm_ideal.c
 **/vtune_result*/**
 cpu_serial/mkl_examples/**
 cuda/build*/
+**/cmake-build-debug/
+**/.idea
