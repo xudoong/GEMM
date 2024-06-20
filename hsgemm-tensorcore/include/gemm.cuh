@@ -24,3 +24,4 @@ void gemm_04_wmma_shmem_opt(GEMM_FUNC_SIGNITURE);
 void gemm_05_wmma_pipeline(GEMM_FUNC_SIGNITURE);
 void gemm_06_mma(GEMM_FUNC_SIGNITURE);
 void gemm_07_mma_permute(GEMM_FUNC_SIGNITURE);
+void gemm_08_mma_swizzle(GEMM_FUNC_SIGNITURE);

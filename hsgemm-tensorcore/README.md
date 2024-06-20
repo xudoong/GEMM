@@ -18,8 +18,9 @@
 |                    | ~~167.4 (53.6%)~~ | 伪kernel，注释掉了gmem->smem的代码，可作为upper bound的参考。(bK=32, stage=2) |
 | k06_mma            | 123.2 (39.5%)     | 基于k05，使用PTX mma, ldmatrix等实现gemm。                   |
 | k07_mma_permute    | 149.1 (47.8%)     | 基于k06，实现A和B在shared memory中的permuted layout          |
+| k08_mma_swizzle    | 151.0 (48.4%)     | 基于k07，使用zig-zag的模式进行cta->block tile的映射。        |
 
-#### Baseline性能
+#### 其他Baseline性能
 
 测试矩阵大小为M=N=K=4096。
 
@@ -28,7 +29,7 @@
 | cuBLAS                                                       | 205.9 (66%)   | cuBLAS                                  |
 | [MatmulTutorial](https://github.com/KnowingNothing/MatmulTutorial/tree/main) | 203.6 (65.2%) | A row-major, B col-major。 v17: cutlass |
 |                                                              | 158.6 (50.8%) | v15                                     |
-| [cuda_hgemm](https://github.com/Bruce-Lee-LY/cuda_hgemm/tree/master) | ~~209~~       | A row-major, B col-major, C精度为half   |
+| [cuda_hgemm](https://github.com/Bruce-Lee-LY/cuda_hgemm/tree/master) | 209       | A row-major, B col-major, C精度为half   |
 
 #### kernel 05 bottleneck分析
 
@@ -61,4 +62,21 @@
 
 上述数据说明消除global memory到shared memory的数据搬运仅能获得3%左右的性能提升，因此应该将关注点放在其他部分。
 
-下一步打算使用mma_m8n8k4的指令，因为这个指令可以接收row-major的B矩阵。
+从上表可以看出，消除load register B之后的movmatrix可以获得3%左右的性能提升，这可以作为B为col-major情形下性能的一个推测。
+
+#### 更多的shared memory
+
+在使用nsight进行性能分析时，发现其报告的cublas调用的kernel名称为ampere_s16816gemm_fp16_256x128_ldg8_stages_32x3_nn，从中可以推断如下信息：
+
+* cublas调用的mma指令tile大小为16x8x16。kernel07与之一致。
+
+* 最外层block的分块大小为128x256x32（不确定256对应M维还是N维），而目前kernel07的分块大小为128x128。
+
+* Pipeline stage为3。
+
+
+一个128x32的half矩阵大小为8KB，cublas一个block需要使用72KB的shared memory，而A100一个block最多使用的static shared meory为48KB。因此需要使
+
+用dynamic shared memory。
+
+所以本人便尝试对kernel07进行修改，将shared memory的申请方式从static变为dynamic。但性能不升反降，仅有100TFLOPS出头。这一现象比较难以解释，因为修改的逻辑仅包括shared memory的申请方式，具体原因尚不清楚，可能和编译器有关，需要分析PTX和SASS代码。
