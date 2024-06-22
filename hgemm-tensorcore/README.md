@@ -17,6 +17,7 @@
 | k06_wmma_stage_dbreg | 172.1 (55.2%) | 基于k05，对shared memory到register的load进行了double buffer。 |
 | k07_mma_padding      | 145.7 (46.7%) | 基于k04，实现了mma版本。cta tile=128x128x64。                |
 | k08_mma_permute      | 121.9 (39.1%) | 基于k07，A和B在shared memory中为permuted layout。            |
+| k09_mma_stage        | 161.3 (51.7%) | 基于k08，实现了stage=3的pipeline。cta tile = 256x128x32。    |
 
 ##### K05_wmma_stage：global memory访问是否进行warp切分
 
