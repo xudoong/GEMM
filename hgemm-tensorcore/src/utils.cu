@@ -94,6 +94,9 @@ void run_kernel(int kernel_num, cublasHandle_t handle, GEMM_FUNC_SIGNITURE)
         case 4:
             gemm_04_wmma_shmem_opt(GEMM_FUNC_PARAM);
             break;
+       case 5:
+            gemm_05_wmma_stage(GEMM_FUNC_PARAM);
+            break;
         default:
             std::cout << "Error: invalid kernel number " << kernel_num << std::endl;
             throw std::invalid_argument("Unknown kernel number");

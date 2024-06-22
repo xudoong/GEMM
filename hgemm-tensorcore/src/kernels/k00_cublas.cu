@@ -7,7 +7,7 @@ void gemm_00_cublas(cublasHandle_t handle, GEMM_FUNC_SIGNITURE) {
     cublasHgemm(handle, CUBLAS_OP_T, CUBLAS_OP_N,
                 N, M, K,
                 &alpha,
-                B, N,
+                B, K,
                 A, K,
                 &beta,
                 C, N);

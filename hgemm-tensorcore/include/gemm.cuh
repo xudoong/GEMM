@@ -16,8 +16,27 @@
 
 #define FAKE_KERNEL_NUMBER 1
 
+template <size_t size>
+__device__ static void copy_async(void *dst, const void *src) {
+    uint32_t smem_ptr = __cvta_generic_to_shared(dst);
+    asm volatile("cp.async.cg.shared.global [%0], [%1], %2;\n" ::"r"(smem_ptr), "l"(src), "n"(size));
+}
+
+__device__ static void copy_async_commit() {
+    asm volatile("cp.async.commit_group;\n" ::);
+}
+
+template <int n>
+__device__ static void copy_async_wait_and_syncthreads() {
+    if (n >= 0) {
+        asm volatile("cp.async.wait_group %0;\n" ::"n"(n));
+    }
+    __syncthreads();
+}
+
 void gemm_00_cublas(cublasHandle_t handle, GEMM_FUNC_SIGNITURE);
 void gemm_01_fake(GEMM_FUNC_SIGNITURE);
 void gemm_02_naive(GEMM_FUNC_SIGNITURE);
 void gemm_03_wmma_shmem(GEMM_FUNC_SIGNITURE);
 void gemm_04_wmma_shmem_opt(GEMM_FUNC_SIGNITURE);
+void gemm_05_wmma_stage(GEMM_FUNC_SIGNITURE);
