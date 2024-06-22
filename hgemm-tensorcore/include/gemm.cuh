@@ -40,3 +40,4 @@ void gemm_02_naive(GEMM_FUNC_SIGNITURE);
 void gemm_03_wmma_shmem(GEMM_FUNC_SIGNITURE);
 void gemm_04_wmma_shmem_opt(GEMM_FUNC_SIGNITURE);
 void gemm_05_wmma_stage(GEMM_FUNC_SIGNITURE);
+void gemm_06_wmma_stage_dbreg(GEMM_FUNC_SIGNITURE);
