@@ -24,6 +24,7 @@ void gemm_04_wmma_shmem_opt(GEMM_FUNC_SIGNITURE);
 void gemm_05_wmma_stage(GEMM_FUNC_SIGNITURE);
 void gemm_06_wmma_stage_dbreg(GEMM_FUNC_SIGNITURE);
 void gemm_07_mma_padding(GEMM_FUNC_SIGNITURE);
+void gemm_08_mma_permute(GEMM_FUNC_SIGNITURE);
 
 template <size_t size>
 __device__ static void copy_async(void *dst, const void *src) {
@@ -70,6 +71,16 @@ __device__ static void ldmatrixA(const void *p, uint32_t *reg) {
 __device__ static void ldmatrixB(const void *p, uint32_t *reg) {
     ldmatrix<2>(p, reg);
 }
+
+// stmatrix requires sm_90 or higher
+//__device__ static void stmatrixC(const void *p, uint32_t *reg) {
+//    uint32_t smem_ptr = __cvta_generic_to_shared(p);
+//    asm volatile ( "stmatrix.sync.aligned.x2.m8n8.shared.b16 "
+//                   "[%0], {%1, %2}; "
+//            : "=r"(smem_ptr)
+//            : "r"(reg[0]), "r"(reg[1])
+//            );
+//}
 
 __device__ static void mma_m16n8k16(uint32_t *rA, uint32_t *rB, uint32_t *rC) {
     asm( "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16 "
