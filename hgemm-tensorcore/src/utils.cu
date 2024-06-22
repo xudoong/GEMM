@@ -109,6 +109,9 @@ void run_kernel(int kernel_num, cublasHandle_t handle, GEMM_FUNC_SIGNITURE)
        case 9:
             gemm_09_mma_stage(GEMM_FUNC_PARAM);
             break;
+        case 10:
+            gemm_10_mma_stage_dbreg(GEMM_FUNC_PARAM);
+            break;
         default:
             std::cout << "Error: invalid kernel number " << kernel_num << std::endl;
             throw std::invalid_argument("Unknown kernel number");
