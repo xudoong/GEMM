@@ -4,9 +4,15 @@
 
 实现的版本为：A, C矩阵均为row-major，B矩阵为col-major。
 
+### 性能测试
+
+<img src="./result/performance.png" style="zoom:50%;" />
+
+### 单个shape的性能
+
 默认使用的算例大小为4096x4096x4096。
 
-| Kernel               | TFLOP（%MAX)  | 简述                                                         |
+| Kernel               | TFLOPS（%MAX) | 简述                                                         |
 | -------------------- | ------------- | ------------------------------------------------------------ |
 | theoretical max      | 312           | A100理论半精度峰值性能                                       |
 | cuBLAS               | 210.7 (67.5%) | cuBLAS                                                       |

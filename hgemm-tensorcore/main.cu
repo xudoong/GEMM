@@ -12,6 +12,9 @@
 const std::string errLogFile = "matrixValidationFailure.txt";
 
 const int theoretical_max_tflops = 312;
+
+
+
 int default_size = 4096;
 int repeat_times = 50;
 int n_warmup = 5;
@@ -22,19 +25,30 @@ int main(int argc, char **argv) {
         exit(EXIT_FAILURE);
     }
 
+    std::vector<int> m_list;
+    for (int i = 1; i <= 64; i++) {
+        m_list.push_back(256 * i);
+    }
+    std::vector<int> n_list = m_list;
+    std::vector<int> k_list = m_list;
+
     int m, n, k;
     bool skip_verification = false;
+    bool only_one_size = false;
     m = n = k = default_size;
     if (argc > 2) {
         for (int i = 2; i < argc; i++) {
             if (argv[i][0] == 'm' && i < argc - 1) {
                 m = std::stoi(argv[i + 1]);
+                only_one_size = true;
             }
             else if (argv[i][0] == 'n' && i < argc - 1) {
                 n = std::stoi(argv[i + 1]);
+                only_one_size = true;
             }
             else if (argv[i][0] == 'k' && i < argc - 1) {
                 k = std::stoi(argv[i + 1]);
+                only_one_size = true;
             }
             else if (argv[i][0] == 'r' && i < argc - 1) {
                 repeat_times = std::stoi(argv[i + 1]);
@@ -43,6 +57,12 @@ int main(int argc, char **argv) {
                 skip_verification = true;
             }
         }
+    }
+
+    if (only_one_size) {
+        m_list = {m};
+        n_list = {n};
+        k_list = {k};
     }
 
     // get kernel number
@@ -87,6 +107,9 @@ int main(int argc, char **argv) {
     half *dC = nullptr;
     half *dC_ref = nullptr;
 
+    m = m_list.back();
+    n = n_list.back();
+    k = k_list.back();
     A = (half *) malloc(sizeof(half) * m * k);
     B = (half *) malloc(sizeof(half) * k * n);
     C = (half *) malloc(sizeof(half) * m * n);
@@ -110,79 +133,89 @@ int main(int argc, char **argv) {
     cudaCheck(cudaMemcpy(dC_ref, C, sizeof(half) * m * n,
                          cudaMemcpyHostToDevice));
 
-    printf("Size: (m, n, k) = (%d, %d, %d).\n", m, n, k);
     printf("Repeat %d times.\n", repeat_times);
-    // Verify the correctness of the calculation, and execute it once before the
-    // kernel function timing to avoid cold start errors
-    if (kernel_num != 0 && kernel_num != FAKE_KERNEL_NUMBER && !skip_verification) {
-        run_kernel(0, handle, m, n, k, alpha, dA, dB, beta, dC_ref);      // cuBLAS
-        run_kernel(kernel_num, handle, m, n, k, alpha, dA, dB, beta,
-                   dC); // Executes the kernel, modifies the result matrix
-        cudaCheck(cudaDeviceSynchronize());
-        cudaCheck(cudaGetLastError()); // Check for async errors during kernel run
-        cudaMemcpy(C, dC, sizeof(half) * m * n, cudaMemcpyDeviceToHost);
-        cudaMemcpy(C_ref, dC_ref, sizeof(half) * m * n, cudaMemcpyDeviceToHost);
 
-        if (!verify_matrix(C_ref, C, m * n)) {
-            std::cout
-                    << "Failed to pass the correctness verification against NVIDIA "
-                       "cuBLAS."
-                    << std::endl;
-            if (m <= 128) {
-                std::cout << " Logging faulty output into " << errLogFile << "\n";
-                std::ofstream fs;
-                fs.open(errLogFile);
-                fs << "A:\n";
-                print_matrix(A, m, n, fs);
-                fs << "B:\n";
-                print_matrix(B, m, n, fs);
-                fs << "C:\n";
-                print_matrix(C, m, n, fs);
-                fs << "Should:\n";
-                print_matrix(C_ref, m, n, fs);
+    for (int test_id = 0; test_id < m_list.size(); test_id++) {
+        m = m_list[test_id];
+        n = n_list[test_id];
+        k = k_list[test_id];
+        printf("-------------------------------------------------\n");
+        printf("Size: (m, n, k) = (%d, %d, %d).\n", m, n, k);
+        // Verify the correctness of the calculation, and execute it once before the
+        // kernel function timing to avoid cold start errors
+        if (kernel_num != 0 && kernel_num != FAKE_KERNEL_NUMBER && !skip_verification) {
+            run_kernel(0, handle, m, n, k, alpha, dA, dB, beta, dC_ref);      // cuBLAS
+            run_kernel(kernel_num, handle, m, n, k, alpha, dA, dB, beta,
+                       dC); // Executes the kernel, modifies the result matrix
+            cudaCheck(cudaDeviceSynchronize());
+            cudaCheck(cudaGetLastError()); // Check for async errors during kernel run
+            cudaMemcpy(C, dC, sizeof(half) * m * n, cudaMemcpyDeviceToHost);
+            cudaMemcpy(C_ref, dC_ref, sizeof(half) * m * n, cudaMemcpyDeviceToHost);
+
+            if (!verify_matrix(C_ref, C, m * n)) {
+                std::cout
+                        << "Failed to pass the correctness verification against NVIDIA "
+                           "cuBLAS."
+                        << std::endl;
+                if (m <= 128) {
+                    std::cout << " Logging faulty output into " << errLogFile << "\n";
+                    std::ofstream fs;
+                    fs.open(errLogFile);
+                    fs << "A:\n";
+                    print_matrix(A, m, n, fs);
+                    fs << "B:\n";
+                    print_matrix(B, m, n, fs);
+                    fs << "C:\n";
+                    print_matrix(C, m, n, fs);
+                    fs << "Should:\n";
+                    print_matrix(C_ref, m, n, fs);
+                }
+                exit(EXIT_FAILURE);
             }
-            exit(EXIT_FAILURE);
+        }
+
+        // warmup
+        for (int j = 0; j < n_warmup; j++) {
+            run_kernel(kernel_num, handle, m, n, k, alpha, dA, dB, beta, dC);
+        }
+
+        // benchmark region
+        std::vector<float> elapsed_times;
+        for (int j = 0; j < repeat_times; j++) {
+            float elapsed_time;
+            cudaEventRecord(beg);
+            // We don't reset dC between runs to save time
+            run_kernel(kernel_num, handle, m, n, k, alpha, dA, dB, beta, dC);
+            cudaEventRecord(end);
+            cudaEventSynchronize(beg);
+            cudaEventSynchronize(end);
+            cudaEventElapsedTime(&elapsed_time, beg, end);
+            elapsed_times.push_back(elapsed_time / 1000);  // Convert to seconds
+        }
+        // report performance
+
+        std::sort(elapsed_times.begin(), elapsed_times.end());
+        std::reverse(elapsed_times.begin(), elapsed_times.end());
+        float tile05_time = elapsed_times[int(repeat_times * 0.05)];
+        float tile50_time = elapsed_times[int(repeat_times * 0.50)];
+        float tile95_time = elapsed_times[int(repeat_times * 0.95)];
+
+        float flops = 2.0 * float(m) * float(n) * k;
+
+        float tflops05 = flops / tile05_time / 1e12;
+        float tflops50 = flops / tile50_time / 1e12;
+        float tflops95 = flops / tile95_time / 1e12;
+
+        printf("TFLOPS: %5.1f (P5)  %5.1f (P50)  %5.1f (P95). %.1f%% of theoretical.\n",
+               tflops05, tflops50, tflops95, tflops50 / theoretical_max_tflops * 100);
+
+        if (!skip_verification) {
+            // make dC and dC_ref equal again (we modified dC while calling our kernel
+            // for benchmarking)
+            cudaCheck(cudaMemcpy(dC, dC_ref, sizeof(half) * m * n,
+                                 cudaMemcpyDeviceToDevice));
         }
     }
-
-    // warmup
-    for (int j = 0; j < n_warmup; j++) {
-        run_kernel(kernel_num, handle, m, n, k, alpha, dA, dB, beta, dC);
-    }
-
-    // benchmark region
-    std::vector<float> elapsed_times;
-    for (int j = 0; j < repeat_times; j++) {
-        float elapsed_time;
-        cudaEventRecord(beg);
-        // We don't reset dC between runs to save time
-        run_kernel(kernel_num, handle, m, n, k, alpha, dA, dB, beta, dC);
-        cudaEventRecord(end);
-        cudaEventSynchronize(beg);
-        cudaEventSynchronize(end);
-        cudaEventElapsedTime(&elapsed_time, beg, end);
-        elapsed_times.push_back(elapsed_time / 1000);  // Convert to seconds
-    }
-    // report performance
-
-    std::sort(elapsed_times.begin(), elapsed_times.end());
-    std::reverse(elapsed_times.begin(), elapsed_times.end());
-    float tile05_time = elapsed_times[int(repeat_times * 0.05)];
-    float tile50_time = elapsed_times[int(repeat_times * 0.50)];
-    float tile95_time = elapsed_times[int(repeat_times * 0.95)];
-
-    float flops = 2.0 * float(m) * float(n) * k;
-
-    float tflops05 = flops / tile05_time / 1e12;
-    float tflops50 = flops / tile50_time / 1e12;
-    float tflops95 = flops / tile95_time / 1e12;
-
-    printf("TFLOPS: %5.1f (P5)  %5.1f (P50)  %5.1f (P95). %.1f%% of theoretical.\n",
-           tflops05, tflops50, tflops95, tflops50 / theoretical_max_tflops * 100);
-    // make dC and dC_ref equal again (we modified dC while calling our kernel
-    // for benchmarking)
-    cudaCheck(cudaMemcpy(dC, dC_ref, sizeof(half) * m * n,
-                         cudaMemcpyDeviceToDevice));
 
     // Free up CPU and GPU space
     free(A);

@@ -56,12 +56,12 @@ bool verify_matrix(half *matRef, half *matOut, int N)
     int i;
     for (i = 0; i < N; i++)
     {
-        diff = fabs(matRef[i] - matOut[i]);
+        diff = fabs(float(matRef[i]) - float(matOut[i]));
         float max_abs = std::max(fabs(matRef[i]), fabs(matOut[i]));
         auto rerr = diff / (max_abs + 1e-8);
         if (diff > 0.1 || rerr > 0.1 || std::isnan(float(matOut[i])))
         {
-            printf("Divergence! Should %5.2f, Is %5.2f (diff %5.2f, rerr %5.2f) at %d\n",
+            printf("Divergence! Should %f, Is %f (diff %f, rerr %f) at %d\n",
                    matRef[i], matOut[i], diff, rerr, i);
             return false;
         }
@@ -109,10 +109,13 @@ void run_kernel(int kernel_num, cublasHandle_t handle, GEMM_FUNC_SIGNITURE)
        case 9:
             gemm_09_mma_stage(GEMM_FUNC_PARAM);
             break;
-        case 10:
+       case 10:
             gemm_10_mma_stage_dbreg(GEMM_FUNC_PARAM);
             break;
-        default:
+       case 11:
+            gemm_11_mma_swizzle(GEMM_FUNC_PARAM);
+            break;
+       default:
             std::cout << "Error: invalid kernel number " << kernel_num << std::endl;
             throw std::invalid_argument("Unknown kernel number");
     }

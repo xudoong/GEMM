@@ -8,3 +8,4 @@ cpu_serial/mkl_examples/**
 cuda/build*/
 **/cmake-build-debug/
 **/.idea
+**/result/log

@@ -27,6 +27,7 @@ void gemm_07_mma_padding(GEMM_FUNC_SIGNITURE);
 void gemm_08_mma_permute(GEMM_FUNC_SIGNITURE);
 void gemm_09_mma_stage(GEMM_FUNC_SIGNITURE);
 void gemm_10_mma_stage_dbreg(GEMM_FUNC_SIGNITURE);
+void gemm_11_mma_swizzle(GEMM_FUNC_SIGNITURE);
 
 template <size_t size>
 __device__ static void copy_async(void *dst, const void *src) {
