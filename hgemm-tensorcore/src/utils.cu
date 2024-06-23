@@ -115,6 +115,9 @@ void run_kernel(int kernel_num, cublasHandle_t handle, GEMM_FUNC_SIGNITURE)
        case 11:
             gemm_11_mma_swizzle(GEMM_FUNC_PARAM);
             break;
+       case 12:
+            gemm_12_mma_swizzle_opt(GEMM_FUNC_PARAM);
+            break;
        default:
             std::cout << "Error: invalid kernel number " << kernel_num << std::endl;
             throw std::invalid_argument("Unknown kernel number");

@@ -6,7 +6,7 @@
 
 ### 性能测试
 
-<img src="./result/performance.png" style="zoom:50%;" />
+<img src="./result/performance.png" style="zoom:40%;" />
 
 ### 单个shape的性能
 
@@ -26,8 +26,12 @@
 | k09_mma_stage        | 161.3 (51.7%) | 基于k08，实现了stage=3的pipeline。cta tile = 256x128x32。    |
 | k10_mma_stage_dbreg  | 204.6 (65.6%) | 基于k09，对shared memory到register的load进行了double buffer。stage=3。 |
 |                      | 212.0 (68.0%) | stage=4。                                                    |
+| k11_mma_swizzle      | 207.4 (66.5%) | 基于k10。block tile的分配进行swizzle。                       |
+| k12_mma_swizzle_opt  | 207.1 (66.4%) | 基于k11。global memory按照warp划分后再访问。                 |
 
-##### K05_wmma_stage：global memory访问是否进行warp切分
+### Misc
+
+#### K05_wmma_stage：global memory访问是否进行warp切分
 
 将一个bM x bN大小的块从global memory搬运到shared memory时，可以将整个cta中的所有线程看作一个整体，也可以先将bMxbN的块进行一维的切分，分配给各个warp。实验发现这两个策略对性能有不可忽略的影响：
 

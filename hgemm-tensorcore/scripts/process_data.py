@@ -16,7 +16,8 @@ kernel_name_map = {
     8: 'mma_permute',
     9: 'mma_stage',
     10: 'mma_stage_dbreg',
-    11: 'mma_swizzle'
+    11: 'mma_swizzle',
+    12: 'mma_swizzle_opt',
 }
 
 def parse_digits(line: str):
@@ -66,7 +67,7 @@ if __name__ == '__main__':
 
     df.to_csv('./result/performance.csv')
 
-    df.plot(marker='x', linestyle='-', figsize=(12, 10))
+    df.plot(marker='x', linestyle='-', figsize=(15, 12))
     plt.title('HGEMM on A100 GPU')
     plt.xlabel('size (M=N=K)')
     plt.ylabel('TFLOPS')
